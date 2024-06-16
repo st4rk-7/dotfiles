@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+export http_proxy=socks5://127.0.0.1:2080/ export https_proxy=$http_proxy export no_proxy="localhost,127.0.0.1,localaddress,.localdomain .com" 

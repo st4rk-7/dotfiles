@@ -1,0 +1,222 @@
+Jun 02 14:31 : exception: Failed to open '/home/sanjeew/.config/mpd/state': No such file or directory
+Jun 02 14:31 : update: added .config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.1s.mp3
+Jun 02 14:31 : update: added .config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3
+Jun 02 14:31 : update: added .config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4
+Jun 02 14:31 : update: added .config/mpv/scripts/simple-mpv-webui/webui-page/static/audio/silence.mp3
+Jun 02 14:31 : update: added /Imagine Dragons - Natural.flac
+Jun 02 14:31 : update: added /fantasize.flac
+Jun 02 14:31 : update: added /23. Tom Odell - Another Love.flac
+Jun 02 14:31 : update: added /JISOO - All Eyes On Me.mp3
+Jun 02 14:31 : update: added /ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3
+Jun 02 14:31 : update: added /Keane - Somewhere Only We Know.flac
+Jun 02 14:31 : update: added /18. I Feel It Coming.flac
+Jun 02 14:31 : update: added /01. FLOWER.flac
+Jun 02 14:31 : update: added /Mitski - My Love Mine All Mine.mp3
+Jun 02 14:31 : update: added /Jessie J - Domino (Sped Up).mp3
+Jun 02 14:31 : update: added /Imagine Dragons - Bones.flac
+Jun 02 14:31 : update: added /Kendrick Lamar - Money Trees.flac
+Jun 02 14:31 : update: added /The Kid Laroi - STAY.mp3
+Jun 02 14:31 : update: added /Imagine Dragons - Whatever It Takes.flac
+Jun 02 14:31 : update: added /Jessie J - Domino.mp3
+Jun 02 14:31 : update: added /Imagine Dragons - Bad Liar.flac
+Jun 02 14:31 : update: added /JISOO - FLOWER.mp3
+Jun 02 14:31 : update: added /Imagine Dragons - Demons.flac
+Jun 02 14:31 : update: added /19. Die For You (Remix).flac
+Jun 02 14:31 : update: added /Travis Scott - MY EYES.flac
+Jun 02 14:31 : update: added /Slowed Audios - Somewhere Only We Know (Slowed + Reverb).flac
+Jun 02 14:31 : update: added /Imagine Dragons - Thunder.flac
+Jun 02 14:31 : update: added /Imagine Dragons - Radioactive.flac
+Jun 02 14:31 : update: added /Imagine Dragons - Birds.flac
+Jun 02 14:31 : update: added /02. All Eyes On Me.flac
+Jun 02 14:31 : update: added /Glass Animals - Heat Waves.mp3
+Jun 02 14:31 : update: added /Imagine Dragons - Warriors.flac
+Jun 02 14:31 : update: added /Aaron Smith - Dancin (feat. Luvli) (Krono Remix).mp3
+Jun 02 16:11 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.1s.mp3"
+Jun 02 16:11 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 16:11 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 16:12 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 16:12 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 16:12 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 16:12 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 16:14 : player: played "Imagine Dragons - Bones.flac"
+Jun 02 16:17 : player: played "JISOO - All Eyes On Me.mp3"
+Jun 02 16:35 : player: played "Imagine Dragons - Bones.flac"
+Jun 02 16:38 : player: played "JISOO - All Eyes On Me.mp3"
+Jun 02 16:56 : player: played "Kendrick Lamar - Money Trees.flac"
+Jun 02 16:56 : player: played ".config/mpv/scripts/simple-mpv-webui/webui-page/static/audio/silence.mp3"
+Jun 02 16:56 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.1s.mp3"
+Jun 02 16:56 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 16:56 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 16:56 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 17:00 : player: played "ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3"
+Jun 02 17:02 : player: played "Imagine Dragons - Bones.flac"
+Jun 02 17:05 : player: played "JISOO - All Eyes On Me.mp3"
+Jun 02 17:32 : player: played "Jessie J - Domino (Sped Up).mp3"
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.1s.mp3"
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 17:33 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 17:33 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 17:34 : player: played "ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3"
+Jun 02 17:35 : exception: Not playing
+Jun 02 17:35 : player: played "ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3"
+Jun 02 18:51 : player: played "ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3"
+Jun 02 18:55 : player: played "ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3"
+Jun 02 19:05 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:05 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:07 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:07 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:07 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:07 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:07 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:07 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:07 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:07 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:07 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:07 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:07 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:07 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:10 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:10 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:10 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:10 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:10 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:10 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:10 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:10 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:10 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:10 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:18 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:18 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:20 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:20 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:20 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 19:20 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 19:23 : player: played "JISOO - All Eyes On Me.mp3"
+Jun 02 19:31 : exception: Not playing
+Jun 02 19:41 : player: played "JISOO - All Eyes On Me.mp3"
+Jun 02 19:44 : player: played "JISOO - All Eyes On Me.mp3"
+Jun 02 19:48 : player: played "Jessie J - Domino (Sped Up).mp3"
+Jun 02 20:50 : exception: Failed to open /home/sanjeew/.config/mpd/playlists/: No such file or directory
+Jun 02 20:53 : player: played "ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3"
+Jun 02 20:57 : player: played "ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3"
+Jun 02 20:59 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 20:59 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 20:59 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 20:59 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 20:59 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 20:59 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 20:59 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 20:59 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 20:59 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 20:59 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 20:59 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 20:59 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 20:59 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 20:59 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 20:59 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 20:59 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 21:02 : player: played "ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3"
+Jun 02 21:05 : player: played "Imagine Dragons - Bones.flac"
+Jun 02 21:05 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 21:05 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 21:05 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 21:05 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 02 21:05 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 02 21:06 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 02 21:09 : player: played "ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3"
+Jun 02 21:09 : exception: Failed to open /home/sanjeew/.config/mpd/playlists/: No such file or directory
+Jun 02 21:10 : exception: Failed to open /home/sanjeew/.config/mpd/playlists/: No such file or directory
+Jun 02 21:11 : exception: Failed to open /home/sanjeew/.config/mpd/playlists/: No such file or directory
+Jun 02 21:15 : player: played "Jessie J - Domino (Sped Up).mp3"
+Jun 02 21:18 : exception: Failed to open /home/sanjeew/.config/mpd/playlists/: No such file or directory
+Jun 02 21:18 : exception: Failed to open /home/sanjeew/.config/mpd/playlists/: No such file or directory
+Jun 02 21:22 : player: played "Imagine Dragons - Whatever It Takes.flac"
+Jun 02 21:39 : player: played "23. Tom Odell - Another Love.flac"
+Jun 02 21:47 : player: played "23. Tom Odell - Another Love.flac"
+Jun 03 09:51 : player: played "ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3"
+Jun 03 10:26 : player: played "ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3"
+Jun 03 10:29 : player: played "Imagine Dragons - Bones.flac"
+Jun 03 10:33 : exception: Number too large: 101
+Jun 03 10:33 : exception: Number too large: 101
+Jun 03 10:33 : exception: Number too large: 101
+Jun 03 10:33 : exception: Number too large: 101
+Jun 03 10:33 : exception: Number too large: 101
+Jun 03 10:33 : exception: Number too large: 101
+Jun 03 10:36 : player: played "Glass Animals - Heat Waves.mp3"
+Jun 03 10:40 : exception: Failed to open /home/sanjeew/.config/mpd/playlists/: No such file or directory
+Jun 03 10:49 : exception: Number too large: 101
+Jun 03 10:49 : player: played "Imagine Dragons - Birds.flac"
+Jun 03 16:50 : exception: Not playing
+Jun 04 14:09 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.1s.mp3"
+Jun 04 14:09 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 04 14:09 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 04 14:12 : player: played "Imagine Dragons - Bones.flac"
+Jun 04 21:34 : player: played "JISOO - All Eyes On Me.mp3"
+Jun 05 19:22 : player: played "Imagine Dragons - Whatever It Takes.flac"
+Jun 05 22:50 : player: played "23. Tom Odell - Another Love.flac"
+Jun 06 18:26 : player: played "23. Tom Odell - Another Love.flac"
+Jun 06 22:33 : player: played "23. Tom Odell - Another Love.flac"
+Jun 07 08:31 : update: added /The Neighbourhood - Sweater Weather.flac
+Jun 07 08:32 : exception: Failed to open /home/sanjeew/.config/mpd/playlists/: No such file or directory
+Jun 07 08:32 : player: played "The Neighbourhood - Sweater Weather.flac"
+Jun 07 12:11 : player: played "The Neighbourhood - Sweater Weather.flac"
+Jun 07 16:17 : player: played "The Neighbourhood - Sweater Weather.flac"
+Jun 07 16:36 : player: played "The Neighbourhood - Sweater Weather.flac"
+Jun 07 17:52 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.1s.mp3"
+Jun 07 17:52 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 07 17:52 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 07 17:52 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 07 17:52 : player: played "The Neighbourhood - Sweater Weather.flac"
+Jun 07 17:52 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.1s.mp3"
+Jun 07 17:52 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 07 17:52 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 07 17:52 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 07 17:52 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 07 17:52 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 07 17:52 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 07 17:52 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 07 17:52 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 07 17:52 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 07 17:52 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.1s.mp3"
+Jun 07 17:52 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 07 17:52 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.5s.mp3"
+Jun 07 17:52 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-1s.mp4"
+Jun 07 21:44 : player: played "ROSÉ - Viva La Vida (Coldplay) Live Studio Cover.mp3"
+Jun 09 10:10 : player: played "Kendrick Lamar - Money Trees.flac"
+Jun 09 10:10 : player: played ".config/mpv/scripts/simple-mpv-webui/webui-page/static/audio/silence.mp3"
+Jun 09 10:10 : player: played ".config/thorium/Default/Extensions/cgbcahbpdhpcegmbfconppldiemgcoii/1.56.1.18_0/web_accessible_resources/noop-0.1s.mp3"
+Jun 09 10:10 : ffmpeg/aac: Could not update timestamps for skipped samples.
+Jun 09 13:27 : player: played "The Neighbourhood - Sweater Weather.flac"
+Jun 09 13:34 : player: played "The Neighbourhood - Sweater Weather.flac"
+Jun 09 13:39 : player: played "The Neighbourhood - Sweater Weather.flac"
+Jun 10 08:25 : player: played "Imagine Dragons - Whatever It Takes.flac"
+Jun 11 13:35 : player: played "23. Tom Odell - Another Love.flac"
+Jun 11 17:43 : player: played "23. Tom Odell - Another Love.flac"
+Jun 13 08:16 : player: played "23. Tom Odell - Another Love.flac"
+Jun 14 16:48 : player: played "23. Tom Odell - Another Love.flac"
+Jun 15 20:06 : player: played "23. Tom Odell - Another Love.flac"
+Jun 15 23:58 : player: played "23. Tom Odell - Another Love.flac"
