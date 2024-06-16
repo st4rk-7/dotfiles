@@ -1,0 +1,175 @@
+:man source:   Xdo
+:man version:  {revnumber}
+:man manual:   Xdo Manual
+
+xdo(1)
+======
+
+Name
+----
+
+xdo - Perform actions on windows
+
+Synopsis
+--------
+
+*xdo* 'ACTION' ['OPTIONS'] ['WID' ...]
+
+Description
+-----------
+
+Apply the given action to the given windows.
+
+If no window IDs and no options are given, the action applies to the focused window.
+
+Actions
+-------
+
+*close*::
+  Close the window.
+
+*kill*::
+  Kill the client.
+
+*hide*::
+  Unmap the window.
+
+*show*::
+  Map the window.
+
+*raise*::
+  Raise the window.
+
+*lower*::
+  Lower the window.
+
+*below*::
+  Put the window below the target (see *-t*).
+
+*above*::
+  Put the window above the target (see *-t*).
+
+*move*::
+  Move the window.
+
+*resize*::
+  Resize the window.
+
+*activate*::
+  Activate the window.
+
+*id*::
+  Print the window's ID.
+
+*pid*::
+  Print the window's pid.
+
+*key_press*::
+*key_release*::
+  Simulate a key press/release event.
+
+*button_press*::
+*button_release*::
+  Simulate a button press/release event.
+
+*pointer_motion*::
+  Simulate a pointer motion event.
+
+*-h*::
+  Print the synopsis and exit.
+
+*-v*::
+  Print the version and exit.
+
+Options
+-------
+
+When options are provided, the action applies to all the children of the root window that match the comparisons implied by the options in relation to the focused window.
+
+*-r*::
+  Distinct ID.
+
+*-c*::
+  Same class.
+
+*-C*::
+  Distinct class.
+
+*-d*::
+  Same desktop.
+
+*-D*::
+  Distinct desktop.
+
+*-n* 'INSTANCE_NAME'::
+  The window has the given instance name.
+
+*-N* 'CLASS_NAME'::
+  The window has the given class name.
+
+*-a* 'WM_NAME'::
+  The window has the given wm name.
+
+*-t* 'WID'::
+  The target window for the *below* and *above* actions.
+
+*-p* 'PID'::
+  The window has the given pid.
+
+*-k* 'CODE'::
+  Use the given code for the *key_press*, *key_release*, *button_press* and *button_release* actions.
+
+*-x* '[±]PIXELS'::
+  Window x coordinate (or delta) for the *move* and *pointer_motion* action.
+
+*-y* '[±]PIXELS'::
+  Window y coordinate (or delta) for the *move* and *pointer_motion* action.
+
+*-w* '[±]PIXELS'::
+  Window width (or delta) for the *resize* action.
+
+*-h* '[±]PIXELS'::
+  Window height (or delta) for the *resize* action.
+
+*-m*::
+  Wait for the existence of a matching window.
+
+*-s*::
+  Handle symbolic desktop numbers.
+
+Examples
+--------
+
+Close the focused window:
+
+----
+xdo close
+----
+
+Close all the windows having the same class as the focused window:
+
+----
+xdo close -c
+----
+
+Hide all the windows of the current desktop except the focused window:
+
+----
+xdo hide -dr
+----
+
+Activate the window which ID is 0x00800109:
+
+----
+xdo activate 0x00800109
+----
+
+Send fake key press/release events with keycode 46 to the focused window:
+
+----
+xdo key_press -k 46; sleep 0.2; xdo key_release -k 46
+----
+
+////
+vim: set ft=asciidoc:
+////
