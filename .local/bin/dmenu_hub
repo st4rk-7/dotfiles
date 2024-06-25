@@ -16,6 +16,7 @@ options = {
     f"󰉦  Bar colors": bar_colors_toggle,
     f"  Fix audio": "fix-audio",
     f"  Edit Configs": "st -e confedit",
+    f"󰂺  Books": "dmenu-books",
     f"  Web Search": "dmenu_web",
     f"󰌹  Handler": "dmenuhandler",
     f"󰌌  Keybinds": "keybinds",

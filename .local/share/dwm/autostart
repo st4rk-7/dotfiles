@@ -1,0 +1,77 @@
+#!/bin/sh
+# Start the compositor
+pgrep -x picom || picom &
+# Set the wallpaper
+setbg ~/Pictures/wallpapers
+
+
+nvim --headless "+Lazy! load all" +qa &
+
+# Clean the bash history file
+#ash_hst_cleanup.sh
+#jellyfin mpv shim
+jellyfin-mpv-shim &&
+
+# Start sxhkd
+pgrep -x sxhkd || sxhkd -m -1 &
+
+#authentication agent
+pgrep -x polkitkdeauth || polkitkdeauth &
+# Hide the cursor
+pgrep -x unclutter || unclutter &
+
+pgrep -x fuz-cache || fuz-cache & 
+
+pgrep -x clipmenud || clipmenud &
+
+
+pgrep -x mpd-mpris || mpd-mpris &
+
+pgrep -x mpv-mpris || mpv-mpris &
+
+#pgrep -x remapd || remapd & reminder
+
+
+
+# Start the notification daemon
+pidof -sx dunst || dunst -config "${XDG_CONFIG_HOME:-$HOME/.config}"/dunst/config &
+
+# Start udiskie
+pgrep -x udiskie || udiskie &
+
+# Start the networkmanager applet
+pgrep -x nm-applet || nm-applet --no-agent &
+
+# Change the screen color
+pgrep -x redshift || redshift &
+
+bluetooth-autoconnect &
+
+# Set DPI. User may want to use a larger number for larger screens.
+xrandr --dpi 96 
+
+# Start the screen locker script
+# (idle 5 min: show asciiquarium; idle 20 min: lock the screen)
+#xset s 300 900 dpms 1300 1300 1300
+#pgrep -x xss-lock || xss-lock -n screensaver.sh -- slock &
+
+# Start the ibus daemon
+#pgrep -x fcitx5 || fcitx5 -d
+
+# Handle timed reminders
+#pgrep -x remind || remind -z -k'notify-send %s; canberra-gtk-play -i complete' "$REMIND_DIR/timed.rem" &
+
+# Start mpd and related programs
+pgrep -x mpd || mpd
+pgrep -x mpdrand.sh || mpdrand.sh &
+pgrep -x mpd-notification || mpd-notification.sh &
+#pgrep -x yams || yams fm scrobbler
+
+
+
+
+
+#for program in $autostart; do
+	#pidof -sx "$program" || "$program" &
+#done >/dev/null 2>&1
+#exec "${XDG_CONFIG_HOME:-$HOME/.config}/dwm/startdwm"

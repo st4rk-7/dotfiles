@@ -258,9 +258,9 @@ static const char* volume_ui_cmd[] = { "st", "-c", "volume-ui", "-g=80x15+353+20
 
 static const Key on_empty_keys[] = {
 	/* modifier key            function          argument */
-	{0,         XK_e,          spawn,            {.v = (const char*[]){"fuz-launcher", NULL } } },
-	{0,         XK_f,          spawn,            {.v = (const char*[]){"fuz-launcher", NULL } } },
-  {0,         XK_w,          spawn,            {.v = (const char*[]){"firefox", NULL } } },
+	{0,         XK_e,          spawn,            {.v = (const char*[]){"fuz", NULL } } },
+	{0,         XK_f,          spawn,            {.v = (const char*[]){"fuz", NULL } } },
+  {0,         XK_w,          spawn,            {.v = (const char*[]){"setbg", NULL } } },
   {0,         XK_grave,      spawn,            {.v = (const char*[]){"dmenunerdsymbols", NULL } } },
   {0,         XK_BackSpace,  spawn,            {.v = (const char*[]){"sysact", NULL } } },
   {0,         XK_r,          spawn,            {.v = (const char*[]){"st", "-e", "lf", NULL } } },
@@ -310,10 +310,10 @@ static const Key keys[] = {
 	{ MODKEY,             XK_q,                     killclient,           {0} },
   { MODKEY|ShiftMask,   XK_q,                     killunsel,            {0} },
 	{ MODKEY,			        XK_w,                     spawn,		            {.v = (const char*[]){ "firefox", NULL } } },
-	{ MODKEY,             XK_e,                     spawn,                {.v = (const char*[]){"fuz-launcher", NULL } } },
+	{ MODKEY,             XK_e,                     spawn,                {.v = (const char*[]){"fuz", NULL } } },
   { ALTKEY,             XK_e,                     spawn,                {.v = (const char*[]){ "networkmanager_dmenu", NULL } } },
 	{ MODKEY,			        XK_r,                     spawn,		            {.v = (const char*[]){ "st", "-e", "lf", NULL } } },
-	{ MODKEY|ShiftMask,	  XK_r,                     spawn,		            {.v = (const char*[]){ "thunar", NULL } } },
+	{ MODKEY,	  XK_z,                     spawn,		            {.v = (const char*[]){ "nemo", NULL } } },
 	{ MODKEY,             XK_t,                     setlayout,            {.v = &layouts[0]} },
 	{ MODKEY,             XK_u,                     setlayout,            {.v = &layouts[1]} },
 	{ MODKEY,             XK_y,                     setlayout,            {.v = &layouts[2]} },
@@ -361,13 +361,11 @@ static const Key keys[] = {
   { MODKEY|Mod1Mask,    XK_Right,                 shiftboth,            { .i = +1 } },
   { MODKEY|ControlMask, XK_Left,                  shiftviewclients,     { .i = -1 } },
   { MODKEY|ControlMask, XK_Right,                 shiftviewclients,     { .i = +1 } },
-{ MODKEY,	 		 XK_w,                     spawn,		            {.v = (const char*[]){ "nitrogen", NULL } } },
-{ MODKEY,	 		 XK_c,                     spawn,		            {.v = (const char*[]){ "firefox", NULL } } },
-{ MODKEY,	 		 XK_z,                     spawn,		            {.v = (const char*[]){ "nemo", NULL } } },
+{ MODKEY,	 		 XK_c,                     spawn,		            {.v = (const char*[]){ "browser", NULL } } },
 { MODKEY,	 		 XK_v,                     spawn,		            {.v = (const char*[]){ "mpv", "--player-operation-mode=pseudo-gui", NULL } } },
 { MODKEY|ShiftMask,	 		 XK_v,                     spawn,		            {.v = (const char*[]){ "jellyfinmediaplayer", NULL } } },
  { ALTKEY,             XK_b,                     spawn,                {.v = (const char*[]){ "dmenu-bluetooth", NULL } } },
- { ALTKEY,             XK_n,                     spawn,                {.v = (const char*[]){ "nekoray", NULL } } },
+ { MODKEY|ShiftMask,             XK_r,                     spawn,                {.v = (const char*[]){ "nekoray", NULL } } },
 };
 
 

@@ -22,4 +22,4 @@ pidof -sx dunst || dunst -config "${XDG_CONFIG_HOME:-$HOME/.config}"/dunst/confi
 # Ensure that xrdb has finished running before moving on to start the WM/DE.
 [ -n "$xrdbpid" ] && wait "$xrdbpid"
 
-"${XDG_CONFIG_HOME:-$HOME/.config}/dwm/autostart" > /dev/null 2>&1
+"${XDG_CONFIG_HOME:-$HOME/.local/share/dwm/autostart" > /dev/null 2>&1

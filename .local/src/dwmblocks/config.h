@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 // String used to delimit block outputs in the status.
-#define DELIMITER " | "
+#define DELIMITER "  "
 // #define DELIMITER " ^c#37474f^^d^ "
 
 // Maximum number of Unicode characters that a block can output.
@@ -22,7 +22,8 @@
   X("cat /tmp/recordingicon 2>/dev/null", 0, 9)                                \
   X("sb-internet", 5, 4)                                                       \
   X("sb-volume", 0, 8)                                                         \
-  X("sb-music2", 1, 5)                                                      \
+  X("sb-music2", 1, 5) 
+  X("sb-mail", 600, 20)                                                     \
   X("sb-temp", 5, 7)                                                      \
   X("sb-battery", 5, 21)                                                       \
   X("sb-bluetooth", 5, 1)                                                      \

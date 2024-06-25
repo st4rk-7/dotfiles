@@ -1,4 +1,4 @@
-w,               firefox,                    browser google chrome web empty internet
+w,              setbg,                   wallpaperswitch google chrome web empty internet
 return,          st,                         shell command prompt st empty enter
 r,               lf,                         file manager empty
 d,               dmenu_run,                  empty apps rofi programs
@@ -10,9 +10,15 @@ mod-w,           firefox,                    browser google chrome web
 mod-return,      open terminal,              shell command prompt st
 mod-backspace,   system actions,             sysact reboot restart renew reload lock leave dwm
 mod-r,           lf,                         file manager
+mod-c,            browser,                   browser menu
+mod-w,            firefox,                   browser 
 mod-d,           dmenu_run,                  apps rofi programs
 mod-a,           dmenu_hub,                  scripts mount color picker edit config kill
 mod-space,       dmenu_web,                  websearch bookmarks internet
+mod-v,           mpv,                       mpv
+mod-shift-v,  jellyfinmediaplayer,      jellyfinplayer
+mod-shift-r,      nekoray,                  xray client  
+alt-b,           dmenu-bluetooth,            bluetooth
 mod-n,           nvim,                       editor text
 mute,            mute volume,                sound
 raisevolume,     increase volume,            sound

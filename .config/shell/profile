@@ -15,6 +15,7 @@ export TERMINAL="st"
 export TERMINAL_PROG="st"
 export BROWSER="firefox"
 export MANPAGER="nvim +Man!"
+export aurhelper="paru"
 # XDG Base Directory
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_CONFIG_HOME="$HOME/.config"

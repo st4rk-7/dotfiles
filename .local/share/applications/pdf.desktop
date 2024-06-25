@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=PDF Reader
+Icon=document-viewer
+Type=Application
+Exec=zathura %U
+MimeType=application/pdf;application/oxps;application/epub+zip;application/x-fictionbook;

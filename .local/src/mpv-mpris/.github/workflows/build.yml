@@ -1,0 +1,53 @@
+---
+name: build
+
+on: [push, pull_request]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install libmpv-dev libglib2.0-dev libavformat-dev
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          make
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: mpris.so
+          path: mpris.so
+          if-no-files-found: error
+
+      - name: Prepare for test
+        run: |
+          sudo apt install mpv playerctl sound-theme-freedesktop bash dbus xvfb xauth jq socat gawk
+
+      - name: Run tests
+        run: |
+          make test
+
+      - name: Check git files unmodified
+        run: |
+          git diff --exit-code HEAD
+
+      - name: Check .gitignore matches generated files
+        run: |
+          ! git ls-files --others --exclude-standard | grep .
+
+      - name: Cleanup generated files
+        run: |
+          make clean
+
+      - name: Check cleanup removed generated files
+        run: |
+          ! git ls-files --others | grep .

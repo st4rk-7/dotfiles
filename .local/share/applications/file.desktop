@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=File Manager
+Icon=system-file-manager
+Type=Application
+Exec=terminal -e lf %u
+MimeType=inode/directory;
