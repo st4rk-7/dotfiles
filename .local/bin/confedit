@@ -24,8 +24,6 @@ configs="[1;34m$HOME/.local/src/dmenu/[1;32mconfig.h
 [1;34m$XDG_CONFIG_HOME/gtk-2.0/[1;32mgtkrc-2.0
 [1;34m$XDG_CONFIG_HOME/gtk-3.0/[1;32msettings.ini
 [1;34m$XDG_CONFIG_HOME/lf/[1;32mlfrc
-[1;34m$XDG_CONFIG_HOME/newsboat/[1;32mconfig
-[1;34m$XDG_CONFIG_HOME/newsboat/[1;32murls
 [1;34m$XDG_CONFIG_HOME/zathura/[1;32mzathurarc
 [1;34m$XDG_DATA_HOME/script-data/[1;32mkeybinds
 [1;34m$XDG_CONFIG_HOME/dmenu_web"
