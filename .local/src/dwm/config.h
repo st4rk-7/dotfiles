@@ -286,6 +286,7 @@ static const Key keys[] = {
   { 0,    			        XK_Print,	                spawn,		            {.v = (const char*[]){ "maimpick", NULL } } },
   { MODKEY,             XK_Print,	                spawn,		            {.v = (const char*[]){ "dmenurecord", NULL } } },
   { MODKEY|ShiftMask,   XK_Delete,                quit,                 {0} },
+  { MODKEY|ShiftMask,   XK_Print,                spawn,                 {.v = (const char*[]){ "ocr", NULL } } },
   { MODKEY,             XK_Delete,                quit,                 {1} },
   { MODKEY,             XK_grave,                 togglescratch,        {.ui = 0 } },
   { MODKEY|ControlMask, XK_grave,                 setscratch,           {.ui = 0 } },

@@ -26,19 +26,63 @@ killrecording() {
 
 		# -f alsa -thread_queue_size 1024 -i default \
 screencast() {
-	ffmpeg -y \
+
+	audio="$(printf "none\nscreen\nmicrophone\nboth" | dmenu -p "Audio Type:")"
+	case "$audio" in
+		none)
+		ffmpeg -y \
 		-f x11grab \
-		-framerate 30 \
-		-s "$(getdim)" \
+		-framerate 60 \
+		-s "$(xdpyinfo | grep dimensions | awk '{print $2;}')" \
 		-i "$DISPLAY" \
-		-r 24 \
-		-use_wallclock_as_timestamps 1 \
-		-c:v h264 \
-		-crf 0 -preset ultrafast -c:a aac \
+		-r 30 \
+		-c:v h264 -crf 0 -preset ultrafast -c:a aac \
 		"$HOME/screencast-$(date '+%y%m%d-%H%M-%S').mp4" &
-	echo $! >/tmp/recordingpid
-	updateicon "^C4^  ^d^"
-}
+		echo $! > /tmp/recordingpid
+		updateicon  "^C4^󰄄 ^d^"
+		;;
+		screen)
+		ffmpeg -y \
+		-f x11grab \
+		-framerate 60 \
+		-s "$(xdpyinfo | grep dimensions | awk '{print $2;}')" \
+		-i "$DISPLAY" \
+		-f pulse -i default \
+		-r 30 \
+		-c:v h264 -crf 0 -preset ultrafast -c:a aac \
+		"$HOME/screencast-$(date '+%y%m%d-%H%M-%S').mp4" &
+		echo $! > /tmp/recordingpid
+		updateicon  "^C4^󰄄 ^d^"
+		;;
+		microphone)
+		ffmpeg -y \
+		-f x11grab \
+		-framerate 60 \
+		-s "$(xdpyinfo | grep dimensions | awk '{print $2;}')" \
+		-i "$DISPLAY" \
+		-f alsa -i default \
+		-r 30 \
+		-c:v h264 -crf 0 -preset ultrafast -c:a aac \
+		"$HOME/screencast-$(date '+%y%m%d-%H%M-%S').mp4" &
+		echo $! > /tmp/recordingpid
+		updateicon  "^C4^󰄄 ^d^"
+		;;
+		both)
+		ffmpeg -y \
+		-f x11grab \
+		-framerate 60 \
+		-s "$(xdpyinfo | grep dimensions | awk '{print $2;}')" \
+		-i "$DISPLAY" \
+		-f alsa -i default \
+		-r 30 \
+		-c:v h264 -crf 0 -preset ultrafast -c:a aac \
+		"$HOME/screencast-$(date '+%y%m%d-%H%M-%S').mp4" &
+		echo $! > /tmp/recordingpid
+		updateicon  "^C4^󰄄 ^d^"
+
+		;;
+	esac
+       	}
 
 video() {
 	ffmpeg \

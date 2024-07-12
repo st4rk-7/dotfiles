@@ -1,0 +1,22 @@
+#!/bin/sh
+# Dependencies: tesseract-ocr
+
+SCR_IMG=`mktemp`
+trap "rm $SCR_IMG*" EXIT
+
+maim -u -s -o > $SCR_IMG.png
+# increase quality with option -q from default 75 to 100
+# Typo "$SCR_IMG.png000" does not continue with same name.
+
+tesseract $SCR_IMG.png $SCR_IMG &> /dev/null
+
+TEXT=`cat $SCR_IMG.txt | sed -e 's/^[[:space:]]*//'`
+echo $TEXT
+
+cat $SCR_IMG.txt | sed -e 's/^[[:space:]]*//' |xclip -i -selection clipboard
+
+notify-send "OCR copied to clipboard" "$TEXT"
+
+rm -r $SCR_IMG.txt $SCR_IMG.png &> /dev/null
+
+exit
