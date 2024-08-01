@@ -2,6 +2,7 @@
 
 options=(
   " Firefox"
+  " Midori"
   " thorium"
   " thorium proxy"
   " Cancel"
@@ -10,6 +11,7 @@ options=(
 
 commands=(
   "firefox "
+  "midori"
   "thorium-browser "
   "thorium-browser --proxy-server="socks5://127.0.0.1:2080" "
    ""

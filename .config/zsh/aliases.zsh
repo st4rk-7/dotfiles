@@ -10,7 +10,7 @@ alias mtar='tar -zcvf' # mtar <archive_compress>
 alias utar='tar -zxvf' # utar <archive_decompress> <file_list>
 alias uz='unzip' # uz <archive_decompress> -d <dir>
 alias reload='source ~/.zprofile'
-alias psg="ps aux | grep -v grep | grep -i -e VSZ -e" 
+alias psg="ps aux | grep -v grep | grep -i -e VSZ -e"
 alias fm='lf'
 alias pacin="pacman -Slq | fzf -m --preview 'cat <(pacman -Si {1}) <(pacman -Fl {1} | awk \"{print \$2}\")' | xargs -ro sudo pacman -S"
 alias paruin="paru -Slq | fzf -m --preview 'cat <(paru -Si {1}) <(paru -Fl {1} | awk \"{print \$2}\")' | xargs -ro  paru -S"
@@ -105,12 +105,12 @@ alias ls='eza -1   --icons=auto' # short list
 alias ll='eza -lha --icons=auto --sort=name --group-directories-first' # long list all
 alias ld='eza -lhD --icons=auto' # long list dirs
 alias lt='eza --icons=auto --tree' # list folder as tree
-alias pr='$aurhelper -R' # uninstall package
-alias up='$aurhelper -Syu' # update system/package/aur
+alias prd='$aurhelper -R' # uninstall package
+alias suu='$aurhelper -Syu' # update system/package/aur
+alias pr='$aurhelper -S' #instal package
 alias pl='$aurhelper -Qs' # list installed package
 alias pa='$aurhelper -Ss' # list availabe package
 alias pc='$aurhelper -Sc' # remove unused cache
-alias prd='$aurhelper -R'
 alias po='$aurhelper -Qtdq | $aurhelper -Rns -' # remove unused packages, also try > $aurhelper -Qqd | $aurhelper -Rsu --print -
 alias vc='code' # gui code editor
 alias fz='read | fzf --query "$2"'
