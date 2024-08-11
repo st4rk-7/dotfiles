@@ -6,7 +6,9 @@ tloaddefscreen(int clear, int loadcursor)
 	if (alt) {
 		if (clear) {
 			tclearregion(0, 0, term.col-1, term.row-1, 1);
+			#if SIXEL_PATCH
 			tdeleteimages();
+			#endif // SIXEL_PATCH
 		}
 		col = term.col, row = term.row;
 		tswapscreen();
@@ -32,7 +34,9 @@ tloadaltscreen(int clear, int savecursor)
 	}
 	if (clear) {
 		tclearregion(0, 0, term.col-1, term.row-1, 1);
+		#if SIXEL_PATCH
 		tdeleteimages();
+		#endif // SIXEL_PATCH
 	}
 }
 
@@ -57,6 +61,7 @@ tclearglyph(Glyph *gp, int usecurattr)
 	gp->u = ' ';
 }
 
+#if SIXEL_PATCH
 void
 treflow_moveimages(int oldy, int newy)
 {
@@ -67,20 +72,23 @@ treflow_moveimages(int oldy, int newy)
 			im->reflow_y = newy;
 	}
 }
+#endif // SIXEL_PATCH
 
 void
 treflow(int col, int row)
 {
-	int i, j, x, x2;
+	int i, j;
 	int oce, nce, bot, scr;
 	int ox = 0, oy = -term.histf, nx = 0, ny = -1, len;
 	int cy = -1; /* proxy for new y coordinate of cursor */
 	int buflen, nlines;
 	Line *buf, bufline, line;
+	#if SIXEL_PATCH
 	ImageList *im, *next;
 
 	for (im = term.images; im; im = im->next)
 		im->reflow_y = INT_MIN; /* unset reflow_y */
+	#endif // SIXEL_PATCH
 
 	/* y coordinate of cursor line end */
 	for (oce = term.c.y; oce < term.row - 1 &&
@@ -112,7 +120,9 @@ treflow(int col, int row)
 			if (len == 0 || !(line[len - 1].mode & ATTR_WRAP)) {
 				for (j = nx; j < col; j++)
 					tclearglyph(&bufline[j], 0);
+				#if SIXEL_PATCH
 				treflow_moveimages(oy+term.scr, ny);
+				#endif // SIXEL_PATCH
 				nx = 0;
 			} else if (nx > 0) {
 				bufline[nx - 1].mode &= ~ATTR_WRAP;
@@ -120,7 +130,9 @@ treflow(int col, int row)
 			ox = 0, oy++;
 		} else if (col - nx == len - ox) {
 			memcpy(&bufline[nx], &line[ox], (col-nx) * sizeof(Glyph));
+			#if SIXEL_PATCH
 			treflow_moveimages(oy+term.scr, ny);
+			#endif // SIXEL_PATCH
 			ox = 0, oy++, nx = 0;
 		} else/* if (col - nx < len - ox) */ {
 			memcpy(&bufline[nx], &line[ox], (col-nx) * sizeof(Glyph));
@@ -131,7 +143,9 @@ treflow(int col, int row)
 			} else {
 				bufline[col - 1].mode |= ATTR_WRAP;
 			}
+			#if SIXEL_PATCH
 			treflow_moveimages(oy+term.scr, ny);
+			#endif // SIXEL_PATCH
 			ox += col - nx;
 			nx = 0;
 		}
@@ -192,6 +206,7 @@ treflow(int col, int row)
 		term.hist[j] = xrealloc(term.hist[j], col * sizeof(Glyph));
 	}
 
+	#if SIXEL_PATCH
 	/* move images to the final position */
 	for (im = term.images; im; im = next) {
 		next = im->next;
@@ -205,15 +220,15 @@ treflow(int col, int row)
 	}
 
 	/* expand images into new text cells */
-	for (im = term.images; im; im = next) {
-		next = im->next;
-		if (im->x < col) {
-			line = TLINE(im->y);
-			x2 = MIN(im->x + im->cols, col);
-			for (x = im->x; x < x2; x++)
-				line[x].mode |= ATTR_SIXEL;
+	for (im = term.images; im; im = im->next) {
+		j = MIN(im->x + im->cols, col);
+		line = TLINE(im->y);
+		for (i = im->x; i < j; i++) {
+			if (!(line[i].mode & ATTR_SET))
+				line[i].mode |= ATTR_SIXEL;
 		}
 	}
+	#endif // SIXEL_PATCH
 
 	for (; buflen > 0; ny--, buflen--)
 		free(buf[ny % nlines]);
@@ -249,7 +264,9 @@ rscrolldown(int n)
 	if ((i = term.scr - n) >= 0) {
 		term.scr = i;
 	} else {
+		#if SIXEL_PATCH
 		scroll_images(n - term.scr);
+		#endif // SIXEL_PATCH
 		term.scr = 0;
 		if (sel.ob.x != -1 && !sel.alt)
 			selmove(-i);
@@ -302,7 +319,9 @@ void
 tresizealt(int col, int row)
 {
 	int i, j;
+	#if SIXEL_PATCH
 	ImageList *im, *next;
+	#endif // SIXEL_PATCH
 
 	/* return if dimensions haven't changed */
 	if (term.col == col && term.row == row) {
@@ -317,7 +336,9 @@ tresizealt(int col, int row)
 	if (i > 0) {
 		/* ensure that both src and dst are not NULL */
 		memmove(term.line, term.line + i, row * sizeof(Line));
+		#if SIXEL_PATCH
 		scroll_images(-i);
+		#endif // SIXEL_PATCH
 		term.c.y = row - 1;
 	}
 	for (i += row; i < term.row; i++)
@@ -348,6 +369,7 @@ tresizealt(int col, int row)
 	/* reset scrolling region */
 	term.top = 0, term.bot = row - 1;
 
+	#if SIXEL_PATCH
 	/* delete or clip images if they are not inside the screen */
 	for (im = term.images; im; im = next) {
 		next = im->next;
@@ -358,6 +380,7 @@ tresizealt(int col, int row)
 				delete_image(im);
 		}
 	}
+	#endif // SIXEL_PATCH
 
 	/* dirty all lines */
 	tfulldirt();
@@ -385,8 +408,14 @@ kscrolldown(const Arg* a)
 		selmove(-n); /* negate change in term.scr */
 	tfulldirt();
 
+	#if SIXEL_PATCH
 	scroll_images(-1*n);
+	#endif // SIXEL_PATCH
 
+	#if OPENURLONCLICK_PATCH
+	if (n > 0)
+		restoremousecursor();
+	#endif // OPENURLONCLICK_PATCH
 }
 
 void
@@ -411,21 +440,32 @@ kscrollup(const Arg* a)
 		selmove(n); /* negate change in term.scr */
 	tfulldirt();
 
+	#if SIXEL_PATCH
 	scroll_images(n);
+	#endif // SIXEL_PATCH
 
+	#if OPENURLONCLICK_PATCH
+	if (n > 0)
+		restoremousecursor();
+	#endif // OPENURLONCLICK_PATCH
 }
 
 void
 tscrollup(int top, int bot, int n, int mode)
 {
+	#if OPENURLONCLICK_PATCH
+	restoremousecursor();
+	#endif //OPENURLONCLICK_PATCH
 
 	int i, j, s;
 	Line temp;
 	int alt = IS_SET(MODE_ALTSCREEN);
 	int savehist = !alt && top == 0 && mode != SCROLL_NOSAVEHIST;
 	int scr = alt ? 0 : term.scr;
+	#if SIXEL_PATCH
 	int itop = top + scr, ibot = bot + scr;
 	ImageList *im, *next;
+	#endif // SIXEL_PATCH
 
 	if (n <= 0)
 		return;
@@ -460,6 +500,7 @@ tscrollup(int top, int bot, int n, int mode)
 		term.line[i+n] = temp;
 	}
 
+	#if SIXEL_PATCH
 	if (alt || !savehist) {
 		/* move images, if they are inside the scrolling region */
 		for (im = term.images; im; im = next) {
@@ -488,6 +529,7 @@ tscrollup(int top, int bot, int n, int mode)
 				im->y += term.scr;
 		}
 	}
+	#endif // SIXEL_PATCH
 
 	if (sel.ob.x != -1 && sel.alt == alt) {
 		if (!savehist) {
@@ -503,12 +545,17 @@ tscrollup(int top, int bot, int n, int mode)
 void
 tscrolldown(int top, int n)
 {
+	#if OPENURLONCLICK_PATCH
+	restoremousecursor();
+	#endif //OPENURLONCLICK_PATCH
 
 	int i, bot = term.bot;
 	int scr = IS_SET(MODE_ALTSCREEN) ? 0 : term.scr;
 	int itop = top + scr, ibot = bot + scr;
 	Line temp;
+	#if SIXEL_PATCH
 	ImageList *im, *next;
+	#endif // SIXEL_PATCH
 
 	if (n <= 0)
 		return;
@@ -523,6 +570,7 @@ tscrolldown(int top, int n)
 		term.line[i-n] = temp;
 	}
 
+	#if SIXEL_PATCH
 	/* move images, if they are inside the scrolling region */
 	for (im = term.images; im; im = next) {
 		next = im->next;
@@ -532,6 +580,7 @@ tscrolldown(int top, int n)
 				delete_image(im);
 		}
 	}
+	#endif // SIXEL_PATCH
 
 	if (sel.ob.x != -1 && sel.alt == IS_SET(MODE_ALTSCREEN))
 		selscroll(top, bot, n);
@@ -541,6 +590,11 @@ void
 tresize(int col, int row)
 {
 	int *bp;
+
+	#if KEYBOARDSELECT_PATCH
+	if (row != term.row || col != term.col)
+		win.mode ^= kbds_keyboardhandler(XK_Escape, NULL, 0, 1);
+	#endif // KEYBOARDSELECT_PATCH
 
 	term.dirty = xrealloc(term.dirty, row * sizeof(*term.dirty));
 	term.tabs = xrealloc(term.tabs, col * sizeof(*term.tabs));
@@ -795,7 +849,9 @@ tswapscreen(void)
 	static int altcol, altrow;
 	Line *tmpline = term.line;
 	int tmpcol = term.col, tmprow = term.row;
+	#if SIXEL_PATCH
 	ImageList *im = term.images;
+	#endif // SIXEL_PATCH
 
 	term.line = altline;
 	term.col = altcol, term.row = altrow;
@@ -803,8 +859,10 @@ tswapscreen(void)
 	altcol = tmpcol, altrow = tmprow;
 	term.mode ^= MODE_ALTSCREEN;
 
+	#if SIXEL_PATCH
 	term.images = term.images_alt;
 	term.images_alt = im;
+	#endif // SIXEL_PATCH
 }
 
 char *

@@ -9,6 +9,7 @@
 #include "util.h"
 
 typedef struct {
+    const char *const icon;
     const char *const command;
     const unsigned int interval;
     const int signal;
@@ -18,12 +19,11 @@ typedef struct {
     pid_t fork_pid;
 } block;
 
-block block_new(const char *const command, const unsigned int interval,
-                const int signal);
+block block_new(const char *const icon, const char *const command,
+                const unsigned int interval, const int signal);
 int block_init(block *const block);
 int block_deinit(block *const block);
 int block_execute(block *const block, const uint8_t button);
 int block_update(block *const block);
-bool block_must_run(const block *const block, const unsigned int time);
 
 #endif  // BLOCK_H

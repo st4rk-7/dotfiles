@@ -16,7 +16,12 @@ resizerectangles(struct lock *lock)
 static void
 drawlogo(Display *dpy, struct lock *lock, int color)
 {
+   #if BLUR_PIXELATED_SCREEN_PATCH
    lock->drawable = lock->bgmap;
+   #else
+   XSetForeground(dpy, lock->gc, lock->colors[BACKGROUND]);
+   XFillRectangle(dpy, lock->drawable, lock->gc, 0, 0, lock->x, lock->y);
+   #endif // BLUR_PIXELATED_SCREEN_PATCH
    XSetForeground(dpy, lock->gc, lock->colors[color]);
    XFillRectangles(dpy, lock->drawable, lock->gc, lock->rectangles, LENGTH(rectangles));
    XCopyArea(dpy, lock->drawable, lock->win, lock->gc, 0, 0, lock->x, lock->y, 0, 0);

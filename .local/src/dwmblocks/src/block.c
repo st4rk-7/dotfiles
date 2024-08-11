@@ -13,9 +13,10 @@
 #include "config.h"
 #include "util.h"
 
-block block_new(const char *const command, const unsigned int interval,
-                const int signal) {
+block block_new(const char *const icon, const char *const command,
+                const unsigned int interval, const int signal) {
     block block = {
+        .icon = icon,
         .command = command,
         .interval = interval,
         .signal = signal,
@@ -143,16 +144,4 @@ int block_update(block *const block) {
     (void)strncpy(block->output, buffer, LEN(buffer));
 
     return 0;
-}
-
-bool block_must_run(const block *const block, const unsigned int time) {
-    if (time == 0) {
-        return true;
-    }
-
-    if (block->interval == 0) {
-        return false;
-    }
-
-    return time % block->interval == 0;
 }
