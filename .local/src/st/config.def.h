@@ -1,17 +1,16 @@
 /* See LICENSE file for copyright and license details. */
-#include "patches.h"
+
 /*
  * appearance
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "JetBrains Mono:pixelsize=13:antialias=true:autohint=true";
+static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
 #if FONT2_PATCH
 /* Spare fonts */
 static char *font2[] = {
-    "Symbols Nerd Font:pixelsize=12:antialias=true:autohint=true",
-    "Unifont:pixelsize=12",
-    "NotoColorEmoji:pixelsize=10:antialias=true:autohint=true",
+/*	"Inconsolata for Powerline:pixelsize=12:antialias=true:autohint=true", */
+/*	"Hack Nerd Font Mono:pixelsize=11:antialias=true:autohint=true", */
 };
 #endif // FONT2_PATCH
 
@@ -30,7 +29,7 @@ static const int pseudotransparency = 0;
  *             0 = no border, 100 = border width is same as cell width */
 int borderperc = 20;
 #else
-static int borderpx = 10;
+static int borderpx = 2;
 #endif // RELATIVEBORDER_PATCH
 
 #if OPENURLONCLICK_PATCH
@@ -131,11 +130,11 @@ int hidecursor = 1;
  *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
  * 0: disable (render all U25XX glyphs normally from the font).
  */
-const int boxdraw = 1;
+const int boxdraw = 0;
 const int boxdraw_bold = 0;
 
 /* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
-const int boxdraw_braille = 1;
+const int boxdraw_braille = 0;
 #endif // BOXDRAW_PATCH
 
 /*
@@ -166,7 +165,7 @@ unsigned int tabspaces = 8;
 
 #if ALPHA_PATCH
 /* bg opacity */
-float alpha = 0.50;
+float alpha = 0.8;
 #if ALPHA_GRADIENT_PATCH
 float grad_alpha = 0.54; //alpha value that'll change
 float stat_alpha = 0.46; //constant alpha value that'll get added to grad_alpha
@@ -248,7 +247,7 @@ unsigned int highlightbg = 160;
  * 7: Blinking st cursor
  * 8: Steady st cursor
  */
-static unsigned int cursorstyle = 3;
+static unsigned int cursorstyle = 1;
 static Rune stcursor = 0x2603; /* snowman (U+2603) */
 #else
 /*
@@ -394,16 +393,9 @@ static MouseShortcut mshortcuts[] = {
 #define TERMMOD (ControlMask|ShiftMask)
 
 #if EXTERNALPIPE_PATCH // example command
-// static char *openurlcmd[] = { "/bin/sh", "-c",
-// 	"xurls | dmenu -l 10 -w $WINDOWID | xargs -r open",
-// 	"externalpipe", NULL };
-
-static char *openurlcmd[] = {"/bin/sh", "-c", "st-urlhandler -o",
-                             "externalpipe", NULL};
-static char *copyurlcmd[] = {"/bin/sh", "-c", "st-urlhandler -c",
-                             "externalpipe", NULL};
-static char *copyoutput[] = {"/bin/sh", "-c", "st-copyout", "externalpipe",
-                             NULL};
+static char *openurlcmd[] = { "/bin/sh", "-c",
+	"xurls | dmenu -l 10 -w $WINDOWID | xargs -r open",
+	"externalpipe", NULL };
 
 #if EXTERNALPIPEIN_PATCH // example command
 static char *setbgcolorcmd[] = { "/bin/sh", "-c",
@@ -418,14 +410,14 @@ static Shortcut shortcuts[] = {
 	{ ControlMask,          XK_Print,       toggleprinter,   {.i =  0} },
 	{ ShiftMask,            XK_Print,       printscreen,     {.i =  0} },
 	{ XK_ANY_MOD,           XK_Print,       printsel,        {.i =  0} },
-	{ TERMMOD,              XK_Up,          zoom,            {.f = +1} },
-	{ TERMMOD,              XK_Down,        zoom,            {.f = -1} },
+	{ TERMMOD,              XK_Prior,       zoom,            {.f = +1} },
+	{ TERMMOD,              XK_Next,        zoom,            {.f = -1} },
 	{ TERMMOD,              XK_Home,        zoomreset,       {.f =  0} },
 	{ TERMMOD,              XK_C,           clipcopy,        {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,       {.i =  0} },
 	#if ALPHA_PATCH
-	{ TERMMOD,              XK_A,           changealpha,     {.f = +0.05} },
-	{ TERMMOD,              XK_S,           changealpha,     {.f = -0.05} },
+	{ TERMMOD,              XK_O,           changealpha,     {.f = +0.05} },
+	{ TERMMOD,              XK_P,           changealpha,     {.f = -0.05} },
 	#if ALPHA_FOCUS_HIGHLIGHT_PATCH
 	//{ TERMMOD,              XK_,           changealphaunfocused, {.f = +0.05} },
 	//{ TERMMOD,              XK_,           changealphaunfocused, {.f = -0.05} },
@@ -457,9 +449,7 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Return,      newterm,         {.i =  0} },
 	#endif // NEWTERM_PATCH
 	#if EXTERNALPIPE_PATCH
-	{ MODKEY,              XK_l,           externalpipe,    { .v = openurlcmd } },
-	{ MODKEY,              XK_y,           externalpipe,    { .v = copyurlcmd } },
-	{ MODKEY,              XK_o,           externalpipe,    { .v = copyoutput } },
+	{ TERMMOD,              XK_U,           externalpipe,    { .v = openurlcmd } },
 	#if EXTERNALPIPEIN_PATCH
 	{ TERMMOD,              XK_M,           externalpipein,  { .v = setbgcolorcmd } },
 	#endif // EXTERNALPIPEIN_PATCH
@@ -766,7 +756,7 @@ static char ascii_printable[] =
  * plumb_cmd is run on mouse button 3 click, with argument set to
  * current selection and with cwd set to the cwd of the active shell
  */
-static char *plumb_cmd = "dmenuhandler";
+static char *plumb_cmd = "plumb";
 #endif // RIGHTCLICKTOPLUMB_PATCH
 
 #if UNDERCURL_PATCH

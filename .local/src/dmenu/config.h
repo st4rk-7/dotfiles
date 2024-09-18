@@ -1,5 +1,6 @@
 /* See LICENSE file for copyright and license details. */
 /* Default settings; can be overriden by command line. */
+#include "patches.h"
 
 static int topbar = 1;                      /* -b  option; if 0, dmenu appears at bottom */
 #if ALPHA_PATCH
@@ -19,7 +20,7 @@ static int instant = 0;                     /* -n  option; if 1, selects matchin
 #endif // INSTANT_PATCH
 #if CENTER_PATCH
 static int center = 0;                      /* -c  option; if 0, dmenu won't be centered on the screen */
-static int min_width = 500;                 /* minimum width when centered */
+static int min_width = 680;                 /* minimum width when centered */
 #endif // CENTER_PATCH
 #if BARPADDING_PATCH
 static const int vertpad = 10;              /* vertical padding of bar */

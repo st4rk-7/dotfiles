@@ -2,7 +2,8 @@
 #define CONFIG_H
 
 // String used to delimit block outputs in the status.
-#define DELIMITER " ^c#37474f^󰄽 ^d^"
+#define DELIMITER "    "
+// #define DELIMITER " ^c#37474f^󰄽 ^d^"
 // #define DELIMITER " ^c#37474f^:: ^d^"
 // #define DELIMITER " ^c#37474f^^d^ "
 
