@@ -3,6 +3,7 @@
 pgrep -x picom || picom &
 # Set the wallpaper
 setbg ~/Pictures/wallpapers
+setxkbmap -option caps:swapescape
 
 
 nvim --headless "+Lazy! load all" +qa &
@@ -10,7 +11,7 @@ nvim --headless "+Lazy! load all" +qa &
 # Clean the bash history file
 #ash_hst_cleanup.sh
 #jellyfin mpv shim
-jellyfin-mpv-shim &&
+#jellyfin-mpv-shim &&
 
 # Start sxhkd
 pgrep -x sxhkd || sxhkd -m -1 &

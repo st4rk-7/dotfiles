@@ -8,6 +8,7 @@ export PATH="$PATH:$(find ~/.local/bin -type d | paste -sd ':' -)"
 export PATH=$PATH:~/.local/share/npm/bin
 export PATH=$PATH:~/.local/share/nvim/mason/bin
 export PATH=$PATH:~/Notes/trash
+export PATH=$PATH:~/.local/share/go/bin/
 
 # Default programs:
 export EDITOR="nvim"
@@ -22,7 +23,6 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 export XDG_SCREENSHOTS_DIR="$HOME/Pictures/screenshots"
-
 
 # FZF
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
@@ -54,7 +54,6 @@ export FZF_DEFAULT_OPTS="
   "
 
 # ~/ Clean-up:
-
 
 # Other & Clean-up
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
@@ -103,10 +102,9 @@ export LESS_TERMCAP_ue="$(printf '%b' '[0m')"
 export LESSOPEN="| /usr/bin/highlight -O ansi %s 2>/dev/null"
 export QT_QPA_PLATFORMTHEME="gtk2" # Have QT use gtk2 theme.
 export QT_SCALE_FACTOR=1.1
-export MOZ_USE_XINPUT2="1" # Mozilla smooth scrolling/touchpads.
+export MOZ_USE_XINPUT2="1"                # Mozilla smooth scrolling/touchpads.
 export AWT_TOOLKIT="MToolkit wmname LG3D" # May have to install wmname
-export _JAVA_AWT_WM_NONREPARENTING=1 # Fix for Java applications in dwm
-
+export _JAVA_AWT_WM_NONREPARENTING=1      # Fix for Java applications in dwm
 
 [ ! -f "$XDG_CONFIG_HOME/shell/shortcutrc" ] && setsid -f shortcuts >/dev/null 2>&1
 
