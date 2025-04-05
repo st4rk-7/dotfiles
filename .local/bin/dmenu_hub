@@ -1,45 +1,39 @@
-#!/usr/bin/env python3
-import subprocess
+#!/usr/bin/env sh
 
-dmenu_command = "dmenu -i -l 16 -W 200 -Y 15 -X 1151 -bw 2"
-apps = "dmenu_run -bw 2 -i -W 390 -X 961 -Y 15 -l 16 -g 3"
-camera = (
-    "mpv --untimed --no-cache --no-osc "
-    "--no-input-default-bindings --profile=low-latency "
-    "--input-conf=/dev/null --title=webcam "
-    "$(ls /dev/video[0,2,4,6,8] | tail -n 1)"
+dmenu_command="dmenu -i -g 8 -l 2"
+
+menu=$(
+  cat <<EOF
+󰀻  Apps            | dmenu_run -i -p "dmenu_run:"
+󰊖  Games           | game-launcher
+  Youtube         | dmenuyt
+󰂺  Books           | dmenuyt
+  Light/Dark Mode | themeflip
+󰉦  Bar colors      | bar_colors_toggle
+  Edit Configs    | st -e confedit
+  Web Search      | dmenu_web
+󰌹  Handler         | dmenuhandler
+󰌌  Keybinds        | keybinds
+󰋊  Mount           | mounter
+󱁌  Unmount         | unmounter
+  Kill            | processkill
+  Pick Color      | xcolor-pick
+  Screenshot      | maimpick
+  Record          | dmenurecord
+󰄄  Camera          | mpv --untimed --no-cache --no-config --no-osc --no-input-default-bindings --profile=low-latency --input-conf=/dev/null --title=webcam \$(ls /dev/video[0,2,4,6,8] | tail -n 1)
+  NerdFont Icons  | dmenunerdsymbols
+EOF
 )
-bar_colors_toggle = '[ -e "$HOME/.cache/bar_color" ] && { rm "$HOME/.cache/bar_color"; renew-dwm; } || { touch "$HOME/.cache/bar_color"; renew-dwm; }'
 
-options = {
-    f"󰀻  Apps": apps,
-    f"󰉦  Bar colors": bar_colors_toggle,
-    f"  Fix audio": "fix-audio",
-    f"  Edit Configs": "st -e confedit",
-    f"󰂺  Books": "dmenu-books",
-    f"  Youtube": "dmenuyt",
-    f"  Web Search": "dmenu_web",
-    f"󰌹  Handler": "dmenuhandler",
-    f"󰌌  Keybinds": "keybinds",
-    f"󰋊  Mount": "mounter",
-    f"󱁌  Unmount": "unmounter",
-    f"  Kill": "processkill",
-    f"  Pick Color": "xcolor-pick",
-    f"  Screenshot": "maimpick",
-    f"  Record": "dmenurecord",
-    f"󰄄  Camera": camera,
-    f"  NerdFont Icons": "dmenunerdsymbols",
-}
-option_list = list(options.keys())
-try:
-    selected_option = (
-        subprocess.check_output(
-            dmenu_command.split(), input="\n".join(option_list).encode()
-        )
-        .decode()
-        .strip()
-    )
-    action = options[selected_option]
-    subprocess.run(action, shell=True)
-except subprocess.CalledProcessError:
-    pass
+# Remove trailing spaces from options
+options=$(echo "$menu" | cut -d '|' -f1 | sed 's/[[:space:]]*$//')
+selected_option=$(echo "$options" | eval "$dmenu_command")
+if [ -n "$selected_option" ]; then
+  # Preserve exact formatting for matching
+  action=$(echo "$menu" | awk -F'|' -v option="$selected_option" '$1 ~ option {print $2}')
+  if [ -n "$action" ]; then
+    eval "$action"
+  else
+    printf "Error: No matching action found for '%s'\n" "$selected_option" >&2
+  fi
+fi

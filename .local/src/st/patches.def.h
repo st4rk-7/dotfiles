@@ -144,10 +144,26 @@
  */
 #define DISABLE_ROMAN_FONTS_PATCH 0
 
+/* Allows dragging a file into the terminal and have the path printed.
+ * https://st.suckless.org/patches/drag-n-drop
+ */
+#define DRAG_AND_DROP_PATCH 0
+
 /* This patch makes the cursor color the inverse of the current cell color.
  * https://st.suckless.org/patches/dynamic-cursor-color/
  */
 #define DYNAMIC_CURSOR_COLOR_PATCH 0
+
+/* This is a variant of the anysize patch that explicitly do not change the size increment hints,
+ * i.e. only keeping the dynamic padding which is the main thing the anysize patch introduces.
+ * In practice this means that the dynamic padding / anysize functionality only ever comes into
+ * effect when the size hints are intentionally ignored.
+ * An example of this would be dwm respecting the size hints of floating windows, but disrespecting
+ * the size hints when the window is tiled (provided that resizehints config is set to 0).
+ *
+ * Note that this patch depends on ANYSIZE_PATCH being enabled to have an effect.
+ */
+#define DYNAMIC_PADDING_PATCH 0
 
 /* Reading and writing st's screen through a pipe, e.g. pass info to dmenu.
  * https://st.suckless.org/patches/externalpipe/
@@ -294,12 +310,32 @@
  */
 #define OPENCOPIED_PATCH 0
 
+/* Open the selected text using xdg-open.
+ * https://st.suckless.org/patches/open_selected_text/
+ */
+#define OPEN_SELECTED_TEXT_PATCH 0
+
 /* This patch allows for URLs to be opened directly when you click on them. This may not work with
  * all terminal applications.
  *
  * https://www.reddit.com/r/suckless/comments/cc83om/st_open_url/
  */
 #define OPENURLONCLICK_PATCH 0
+
+/* This patch allows st to fetch the current working directory through the OSC 7 escape
+ * sequence emitted by shells. Must be used with newterm patch.
+ *
+ * https://codeberg.org/dnkl/foot/wiki#spawning-new-terminal-instances-in-the-current-working-directory
+ * https://github.com/veltza/st-sx/commit/817865c2c6ed905af8849580e58bdcf399216fbd
+ */
+#define OSC7_PATCH 0
+
+/* This patch allows jumping between prompts by utilizing the OSC 133 escape sequence
+ * emitted by shells. Must be used with either reflow or scrollback patch.
+ *
+ * https://codeberg.org/dnkl/foot#jumping-between-prompts
+ */
+#define OSC133_PATCH 0
 
 /* Reflow.
  * Allows st to be resized without cutting off text when the terminal window is made larger again.

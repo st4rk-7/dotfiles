@@ -6,7 +6,7 @@ set icons
 set nohidden
 set period 1
 set sortby ext
-set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml:*.srt"
+set hiddenfiles ".*:*.aux:*template.out:*template.toc:*.fls:*.fdb_latexmk:*.synctex.gz:*.out:*.xdv:*.log:*.bbl:*.bcf:*.blg:*.run.xml:*.srt:compile_flags.txt:compile_commands.json"
 set promptfmt "\033[32m  \033[35;1m%d\033[0m\033[1m%f\033[0m"
 set autoquit true
 
@@ -15,16 +15,6 @@ set previewer ctpv
 set cleaner ctpvclear
 &ctpv -s $id
 &ctpvquit $id
-
-# cmds/functions
-cmd on-cd &{{
-  printf "\033]0; $PWD\007" > /dev/tty
-  export STARSHIP_SHELL=
-  fmt="$(starship prompt)"
-  lf -remote "send $id set promptfmt \"$fmt\""
-}}
-
-on-cd
 
 cmd open ${{
   case $(file --mime-type "$(readlink -f $f)" -b) in
@@ -56,7 +46,7 @@ cmd open ${{
   esac
 }}
 
-cmd fzf_search ${{
+cmd find_files ${{
   selected=$(fzf-fd)
   if [ -n "$selected" ]; then
     lf -remote "send $id set hidden"
@@ -64,89 +54,33 @@ cmd fzf_search ${{
   fi
 }}
 
-cmd live_server ${{
-  setsid -f live-server "$PWD"
+cmd compress ${{
+	clear; tput cup $(($(tput lines)/3)); tput bold
+	set -f
+	printf "%s\n\t" "$fx"
+	compressor $fx
 }}
 
 cmd extract ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
 	printf "%s\n\t" "$fx"
-	ans=$(echo -e "No\nYes" | fzf --prompt="Extract?" --ansi --border=rounded --margin=0,35% --no-info --height=7)
-	[ $ans = "Yes" ] && {
-		case $fx in
-			*.tar.bz2)   tar xjf $fx     ;;
-			*.tar.gz)    tar xzf $fx     ;;
-			*.bz2)       bunzip2 $fx     ;;
-			*.rar)       unrar e $fx     ;;
-			*.gz)        gunzip $fx      ;;
-			*.tar)       tar xf $fx      ;;
-			*.tbz2)      tar xjf $fx     ;;
-			*.tgz)       tar xzf $fx     ;;
-			*.zip)       unzip $fx       ;;
-			*.Z)         uncompress $fx  ;;
-			*.7z)        7z x $fx        ;;
-			*.tar.xz)    tar xf $fx      ;;
-		esac
-	}
+	extractor $fx
 }}
 
 cmd delete ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
 	printf "%s\n\t" "$fx"
-  ans=$(echo -e "No\nYes" | fzf --prompt="Delete?" --ansi --border=rounded --margin=0,35% --no-info --height=7)
+  ans=$(echo -e "No\nYes" | fzf --prompt="Delete?" --ansi --border=block --margin=0,35% --no-info --height=7)
 	[ $ans = "Yes" ] && trash-put $fx
 }}
 
-cmd moveto ${{
-	clear; tput cup $(($(tput lines)/3)); tput bold
-	set -f
-	clear; echo "Move to where?"
-	dest="$(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | fzf | sed 's|~|$HOME|')" &&
-	for x in $fx; do
-		eval mv -iv \"$x\" \"$dest\"
-	done &&
-	notify-send "🚚 File(s) moved." "File(s) moved to $dest."
-}}
-
-cmd copyto ${{
-	clear; tput cup $(($(tput lines)/3)); tput bold
-	set -f
-	clear; echo "Copy to where?"
-	dest="$(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | fzf | sed 's|~|$HOME|')" &&
-	for x in $fx; do
-		eval cp -ivr \"$x\" \"$dest\"
-	done &&
-	notify-send "📋 File(s) copied." "File(s) copies to $dest."
-}}
-
-cmd bulkrename ${{
-    tmpfile_old="$(mktemp)"
-    tmpfile_new="$(mktemp)"
-
-    [ -n "$fs" ] && fs=$(basename -a $fs) || fs=$(ls)
-
-    echo "$fs" > "$tmpfile_old"
-    echo "$fs" > "$tmpfile_new"
-    $EDITOR "$tmpfile_new"
-
-    [ "$(wc -l < "$tmpfile_old")" -eq "$(wc -l < "$tmpfile_new")" ] || { rm -f "$tmpfile_old" "$tmpfile_new"; exit 1; }
-
-    paste "$tmpfile_old" "$tmpfile_new" | while IFS="$(printf '\t')" read -r src dst
-    do
-        [ "$src" = "$dst" ] || [ -e "$dst" ] || mv -- "$src" "$dst"
-    done
-
-    rm -f "$tmpfile_old" "$tmpfile_new"
-    lf -remote "send $id unselect"
-}}
-
 cmd git_branch ${{
-    git branch | fzf | xargs git checkout
-    pwd_shell=$(pwd | sed 's/\\/\\\\/g;s/"/\\"/g')
-    lf -remote "send $id updir"
-    lf -remote "send $id cd \"$pwd_shell\""
+  git branch | fzf | xargs git checkout
+  pwd_shell=$(pwd | sed 's/\\/\\\\/g;s/"/\\"/g')
+  lf -remote "send $id updir"
+  lf -remote "send $id cd \"$pwd_shell\""
 }}
 
 cmd git_root ${{
@@ -158,12 +92,6 @@ cmd git_root ${{
       read -r _
       exit 1
   fi
-}}
-
-cmd sanitize ${{
-	set -f
-	sanitizefs ${fx}
-	# sanitizefs ${PWD}
 }}
 
 cmd resize-for-wallpaper ${{
@@ -183,15 +111,11 @@ cmd resize-for-wallpaper ${{
 
 cmd extract-audio ${{
   for video in $fx; do
-    # Check if the file is a video
     mime_type=$(file --mime-type -b "$video")
     if [[ $mime_type == video/* ]]; then
-      # Extract the filename without the extension
       filename=$(basename -- "$video")
       extension="${filename##*.}"
       filename="${filename%.*}"
-
-      # Use ffmpeg to extract audio and save it as mp3
       ffmpeg -i "$video" -q:a 0 -map a "${filename}.mp3"
       echo "Audio extracted from $video and saved as ${filename}.mp3"
     else
@@ -200,69 +124,73 @@ cmd extract-audio ${{
   done
 }}
 
-cmd toggle_preview %{{
-  if [ "$lf_preview" = "true" ]; then
+cmd cycle_preview %{{
+  if [ "$lf_preview" = "false" ]; then
+      lf -remote "send $id :set preview true; set previewer ctpv; set ratios 1:2:3"
+  elif [ "$lf_previewer" = "ctpv" ]; then
+      lf -remote "send $id :set previewer exiftool; set ratios 1:2:3; reload"
+  else
       lf -remote "send $id :set preview false; set ratios 1:5"
-  else
-      lf -remote "send $id :set preview true; set ratios 1:2:3"
   fi
 }}
 
-cmd change_preview %{{
-  if [ "$lf_previewer" = "ctpv" ]; then
-      lf -remote "send $id :set previewer exiftool; reload"
-  else
-      lf -remote "send $id :set previewer ctpv; reload"
+cmd rename_random ${{
+  for file in $fx; do
+    new_name=$(printf "%s.%s" "$(openssl rand -hex 6)" "${file##*.}")
+    mv "$file" "$new_name"
+  done
+}}
+
+cmd new_files ${{ eval "ff $@" }}
+
+cmd jumpcd ${{
+  jumpdir=$(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | fzf)
+  if [ -n "$jumpdir" ]; then
+    lf -remote "send $id set hidden"
+    lf -remote "send $id cd $(eval echo $jumpdir)"
   fi
 }}
 
-cmd ff $ff "$(echo $*)"
-cmd share $curl -F"file=@$fx" -Fexpires=24 https://0x0.st | xclip -selection c
-cmd setbg "$1"
-
-# Bindings
-map <esc> :quit
-map / :fzf_search
-map ? $fzf-grep "$PWD"
-map sw $setsid -f live-server "$PWD" >/dev/null 2>&1
-map J $lf -remote "send $id cd $(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | fzf)"
-map r reload
-map so $organize
-map <c-b> resize-for-wallpaper
-map gh $lazygit
-map gg top
-map D delete
-map E extract
-map C copyto
-map M moveto
-map <c-n> push :ff<space>
-map <c-r> sanitize
-map <c-s> share
+map r       reload
+map gg      top
+map D       delete
+map <esc>   :quit
+map /       :find_files
+map ?       $fzf-grep "$PWD"
+map o       $mimeopen --ask "$f"
+map <c-n>   push :new_files<space>
 map <enter> shell
-map x $$f
-map X !$f
-map o &mimeopen "$f"
-map O $mimeopen --ask "$f"
-map a :rename; cmd-end # at the very end
-map c push A<c-u> # new rename
-map I :rename; cmd-home # at the very beginning
-map i :rename # before extension
-map A :rename; cmd-right # after extension
-map B bulkrename
-map b $setbg $f
-map <c-e> down
-map <c-y> up
-map V push :!nvim<space>
-map W $setsid -f $TERMINAL >/dev/null 2>&1
-map . set hidden!
-map U $printf "%s" "$fx" | xclip -selection clipboard
-map u $printf "%s" "$fx" | sed 's/.*\///' | xclip -selection clipboard
-map T $sxiv -t "$(pwd)" # opens thumbnail mode
-map <c-l> unselect
-map zp toggle_preview
-map ze change_preview
+map <c-l>   unselect
+map .       set hidden!
+map zp      cycle_preview
+map J       jumpcd
+map so      $organize
+map <a-d>   ${{ setsid -f dragon-drop -x -a "$fx" }}
+map <a-s>   ${{ fileshare $f }}
+map <a-b>   resize-for-wallpaper
+map b       $setbg $f
+map V       push :!nvim<space>
+map W       $setsid -f $TERMINAL >/dev/null 2>&1
+
+map x+ ${{ chmod +x $fx; lf -remote "send $id reload" }}
+map x- ${{ chmod -x $fx; lf -remote "send $id reload" }}
+map xs $setsid -f live-server "$PWD" >/dev/null 2>&1
+map xx $compiler $f
+
+map E extract
+map C compress
+
+map i     :rename
+map I     $vidir $fx
+map <a-i> ${{ set -f; sanitizefs ${fx} }}
+map <a-I> rename_random
+
+map gh $lazygit
 map gb :git_branch
 map gr :git_root
-map gp ${{clear; git pull --rebase || true; echo "press ENTER"; read ENTER}}
-map gs ${{clear; git status; echo "press ENTER"; read ENTER}}
+map gp ${{clear; git pull --rebase || true; echo "\n\033[32mpress ENTER\033[0m"; read ENTER}}
+map gs ${{clear; git status; echo "\n\033[32mpress ENTER\033[0m"; read ENTER}}
 map gl ${{clear; git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit}}
+
+map U $printf "%s" "$fx" | xclip -selection clipboard
+map u $printf "%s" "$fx" | sed 's/.*\///' | xclip -selection clipboard

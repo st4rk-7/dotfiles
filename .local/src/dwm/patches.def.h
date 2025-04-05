@@ -516,6 +516,16 @@
  */
 #define BIDI_PATCH 0
 
+/* This patch adds a client rule option to allow the border width to be specified on a per
+ * client basis.
+ *
+ * Example rule:
+ *    RULE(.class = "Gimp", .bw = 0)
+ *
+ * https://dwm.suckless.org/patches/borderrule/
+ */
+#define BORDER_RULE_PATCH 0
+
 /* This patch adds an iscentered rule to automatically center clients on the current monitor.
  * This patch takes precedence over centeredwindowname, alwayscenter and fancybar patches.
  * https://dwm.suckless.org/patches/center/
@@ -1422,6 +1432,12 @@
  * https://dwm.suckless.org/patches/xrdb/
  */
 #define XRDB_PATCH 0
+
+/* This patch allows for integer, float and string settings to be loaded from Xresources.
+ * Xresources takes precedence over xrdb.
+ * https://dwm.suckless.org/patches/xresources/
+ */
+#define XRESOURCES_PATCH 0
 
 /* Simple patch that allows floating windows to be zoomed into the master stack position.
  * https://www.reddit.com/r/suckless/comments/ie5fe3/zoomfloating_my_own_simple_original_patch/

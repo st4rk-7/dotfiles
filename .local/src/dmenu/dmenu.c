@@ -268,14 +268,19 @@ cleanup(void)
 {
 	size_t i;
 
-	XUngrabKey(dpy, AnyKey, AnyModifier, root);
+	XUngrabKeyboard(dpy, CurrentTime);
 	#if INPUTMETHOD_PATCH
 	XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
 	#endif // INPUTMETHOD_PATCH
 	for (i = 0; i < SchemeLast; i++)
 		free(scheme[i]);
-	for (i = 0; items && items[i].text; ++i)
+	for (i = 0; items && items[i].text; ++i) {
+		#if SEPARATOR_PATCH
+		free(separator_reverse ? items[i].text_output : items[i].text);
+		#else
 		free(items[i].text);
+		#endif // SEPARATOR_PATCH
+	}
 	free(items);
 	#if HIGHPRIORITY_PATCH
 	for (i = 0; i < hplength; ++i)
@@ -647,10 +652,18 @@ drawmenu(void)
 	} else if (matches) {
 		/* draw horizontal list */
 		x += inputw;
+		#if SYMBOLS_PATCH
+		w = TEXTW(symbol_1);
+		#else
 		w = TEXTW("<");
+		#endif // SYMBOLS_PATCH
 		if (curr->left) {
 			drw_setscheme(drw, scheme[SchemeNorm]);
+			#if SYMBOLS_PATCH
+			drw_text(drw, x, 0, w, bh, lrpad / 2, symbol_1, 0
+			#else
 			drw_text(drw, x, 0, w, bh, lrpad / 2, "<", 0
+			#endif // SYMBOLS_PATCH
 				#if PANGO_PATCH
 				, True
 				#endif // PANGO_PATCH
@@ -1235,8 +1248,16 @@ insert:
 			if (print_index)
 				printf("%d\n", sel->index);
 			else
-			#endif // PRINTINDEX_PATCH
+			#if SEPARATOR_PATCH
+				puts(sel->text_output);
+			#else
+				puts(sel->text);
+			#endif // SEPARATOR_PATCH
+			#elif SEPARATOR_PATCH
+			puts(sel->text_output);
+			#else
 			puts(sel->text);
+			#endif // PRINTINDEX_PATCH | SEPARATOR_PATCH
 		} else {
 			if (text[0] == startpipe[0]) {
 				strncpy(text + strlen(text),pipeout,8);
@@ -1245,27 +1266,33 @@ insert:
 			puts(text);
 		}
 		#elif PRINTINPUTTEXT_PATCH
-		if (use_text_input)
+		if (use_text_input) {
+			#if SEPARATOR_PATCH
+			puts((sel && (ev->state & ShiftMask)) ? sel->text_output : text);
+			#else
 			puts((sel && (ev->state & ShiftMask)) ? sel->text : text);
+			#endif // SEPARATOR_PATCH
 		#if PRINTINDEX_PATCH
-		else if (print_index)
+		} else if (print_index) {
 			printf("%d\n", (sel && !(ev->state & ShiftMask)) ? sel->index : -1);
 		#endif // PRINTINDEX_PATCH
-		else
+		} else {
 			#if SEPARATOR_PATCH
 			puts((sel && !(ev->state & ShiftMask)) ? sel->text_output : text);
 			#else
 			puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
 			#endif // SEPARATOR_PATCH
+		}
 		#elif PRINTINDEX_PATCH
-		if (print_index)
+		if (print_index) {
 			printf("%d\n", (sel && !(ev->state & ShiftMask)) ? sel->index : -1);
-		else
+		} else {
 			#if SEPARATOR_PATCH
 			puts((sel && !(ev->state & ShiftMask)) ? sel->text_output : text);
 			#else
 			puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
 			#endif // SEPARATOR_PATCH
+		}
 		#elif SEPARATOR_PATCH
 		puts((sel && !(ev->state & ShiftMask)) ? sel->text_output : text);
 		#else

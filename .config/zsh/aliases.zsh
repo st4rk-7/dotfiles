@@ -112,6 +112,7 @@ alias pl='$aurhelper -Qs' # list installed package
 alias pa='$aurhelper -Ss' # list availabe package
 alias pc='$aurhelper -Sc' # remove unused cache
 alias po='$aurhelper -Qtdq | $aurhelper -Rns -' # remove unused packages, also try > $aurhelper -Qqd | $aurhelper -Rsu --print -
+alias updatemirror='sudo reflector --save /etc/pacman.d/mirrorlist --protocol https --country Singapore --latest 5 --sort age --fastest 5'
 alias vc='code' # gui code editor
 alias fz='read | fzf --query "$2"'
 alias fch='fastfetch'
@@ -119,7 +120,7 @@ alias mke='sudo make install'
 alias lgout='systemctl suspend'
 alias youtube="mov-cli -s youtube"
 alias chmd="chmod +x "
-alias setbg="setbg ~/Pictures/wallpapers"
+alias setbg="setbg ~/Pictures/Wallpapers"
 alias cleanup="sudo pacman -Qtdq | sudo pacman -Rns -"
 # Handy change dir shortcuts
 alias ..='cd ..'

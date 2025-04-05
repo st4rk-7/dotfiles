@@ -1,6 +1,7 @@
 <h1 align="center"> slock</h1>
-
+=======
 Personal build of slock generated using [slock-flexipatch](https://github.com/bakkeby/slock-flexipatch.git)
+
 ### Patches applied:
 
    - [blur_pixelated_screen](https://tools.suckless.org/slock/patches/blur-pixelated-screen/)

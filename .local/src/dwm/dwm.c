@@ -101,7 +101,6 @@
 #else
 #define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]))
 #endif // ATTACHASIDE_PATCH
-#define LENGTH(X)               (sizeof X / sizeof X[0])
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
@@ -580,10 +579,17 @@ typedef struct {
 	#if XKB_PATCH
 	int xkb_layout;
 	#endif // XKB_PATCH
+	#if BORDER_RULE_PATCH
+	int bw;
+	#endif // BORDER_RULE_PATCH
 } Rule;
 
-#if XKB_PATCH
+#if BORDER_RULE_PATCH && XKB_PATCH
+#define RULE(...) { .monitor = -1, .xkb_layout = -1, .bw = -1, __VA_ARGS__ },
+#elif XKB_PATCH
 #define RULE(...) { .monitor = -1, .xkb_layout = -1, __VA_ARGS__ },
+#elif BORDER_RULE_PATCH
+#define RULE(...) { .monitor = -1, .bw = -1, __VA_ARGS__ },
 #else
 #define RULE(...) { .monitor = -1, __VA_ARGS__ },
 #endif // XKB_PATCH
@@ -920,6 +926,10 @@ applyrules(Client *c)
 			#if CENTER_PATCH
 			c->iscentered = r->iscentered;
 			#endif // CENTER_PATCH
+			#if BORDER_RULE_PATCH
+			if (r->bw != -1)
+				c->bw = r->bw;
+			#endif // BORDER_RULE_PATCH
 			#if ISPERMANENT_PATCH
 			c->ispermanent = r->ispermanent;
 			#endif // ISPERMANENT_PATCH
@@ -4562,7 +4572,8 @@ unmanage(Client *c, int destroyed)
 		XSelectInput(dpy, c->win, NoEventMask);
 		XConfigureWindow(dpy, c->win, CWBorderWidth, &wc); /* restore border */
 		XUngrabButton(dpy, AnyButton, AnyModifier, c->win);
-		setclientstate(c, WithdrawnState);
+		if (!HIDDEN(c))
+			setclientstate(c, WithdrawnState);
 		XSync(dpy, False);
 		XSetErrorHandler(xerror);
 		XUngrabServer(dpy);
@@ -5344,10 +5355,10 @@ main(int argc, char *argv[])
 		die("dwm: cannot get xcb connection\n");
 	#endif // SWALLOW_PATCH
 	checkotherwm();
-	#if XRDB_PATCH && !BAR_VTCOLORS_PATCH
+	#if XRESOURCES_PATCH || XRDB_PATCH
 	XrmInitialize();
-	loadxrdb();
-	#endif // XRDB_PATCH && !BAR_VTCOLORS_PATCH
+	load_xresources();
+	#endif // XRESOURCES_PATCH | XRDB_PATCH
 	#if COOL_AUTOSTART_PATCH
 	autostart_exec();
 	#endif // COOL_AUTOSTART_PATCH

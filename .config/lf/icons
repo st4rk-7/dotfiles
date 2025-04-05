@@ -105,6 +105,7 @@ fi      󰈔       # FILE
 *.xul           
 *.sln           
 *.suo           
+*.org           
 *.pl            
 *.pm            
 *.t             
@@ -284,7 +285,7 @@ Vagrantfile             
 *.tif   
 *.tiff  
 *.png   
-*.svg   
+*.svg   󰕙
 *.svgz  
 *.mng   
 *.pcx   
@@ -339,6 +340,7 @@ Vagrantfile             
 
 # custom rules
 *.pdf           
+*.bib           󱉟
 dotfiles/       󱁿
 downloads/      󱧨
 music/          󱍙
@@ -353,5 +355,6 @@ series/         󰔂
 projects/       󱧼
 videos/         󰕧
 me/             󰉌
+games/          󰊖
 tutorials/      
 portfolio/      

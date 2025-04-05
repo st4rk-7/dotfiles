@@ -2,7 +2,7 @@
 # Start the compositor
 pgrep -x picom || picom &
 # Set the wallpaper
-setbg ~/Pictures/wallpapers
+setbg ~/Pictures/Wallpapers
 setxkbmap -option caps:swapescape
 
 
@@ -21,7 +21,7 @@ pgrep -x polkitkdeauth || polkitkdeauth &
 # Hide the cursor
 pgrep -x unclutter || unclutter &
 
-pgrep -x fuz-cache || fuz-cache & 
+pgrep -x fuz-cache || fuz-cache &
 
 pgrep -x clipmenud || clipmenud &
 
@@ -49,7 +49,7 @@ pgrep -x redshift || redshift &
 bluetooth-autoconnect &
 
 # Set DPI. User may want to use a larger number for larger screens.
-xrandr --dpi 96 
+xrandr --dpi 96
 
 # Start the screen locker script
 # (idle 5 min: show asciiquarium; idle 20 min: lock the screen)
