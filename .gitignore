@@ -1,3 +1,31 @@
+# Git submodules
+.gitmodules
+.git/modules/
+
+# Local stow ignore file
 .stow-local-ignore
-.config/nvim/spell
-.uuid
+
+# Zsh private configuration
+shell/.config/zsh/private.zsh
+shell/.config/zsh/.zhistory
+
+# Sensitive files and directories
+# History files
+.bash_history
+.zsh_history
+.history
+*.hist
+*history*
+
+# Cache and log files
+*.cache
+*.log
+*.bak
+*.swp
+*cache*
+*log*
+
+# Clipboard history (common locations/patterns)
+.local/share/clipmenu/
+.local/share/clipboard-history/
+*clipboard*

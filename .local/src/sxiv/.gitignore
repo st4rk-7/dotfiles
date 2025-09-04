@@ -1,6 +1,0 @@
-config.h
-patches.h
-version.h
-*.d
-*.o
-sxiv

@@ -1,5 +1,0 @@
-*.o
-dwm
-dwm-msg
-.cache
-compile_commands.json
