@@ -1,0 +1,113 @@
+#!/bin/sh
+# Start the compositor
+pgrep -x picom || picom &
+# Set the wallpaper
+setbg ~/Pictures/Wallpapers
+setxkbmap -option caps:swapescape
+
+
+
+
+# Clean the bash history file
+#ash_hst_cleanup.sh
+#jellyfin mpv shim
+#jellyfin-mpv-shim &&
+
+# Start sxhkd
+pgrep -x sxhkd || sxhkd -m -1 &
+
+#authentication agent
+pgrep -x polkitkdeauth || polkitkdeauth &
+# Hide the cursor
+pgrep -x unclutter || unclutter &
+
+pgrep -x fuz-cache || fuz-cache &
+
+pgrep -x clipmenud || clipmenud &
+
+
+pgrep -x mpd-mpris || mpd-mpris &
+
+pgrep -x mpv-mpris || mpv-mpris &
+
+#pgrep -x remapd || remapd & reminder
+
+
+
+# Start the notification daemon
+pidof -sx dunst || dunst -config "${XDG_CONFIG_HOME:-$HOME/.config}"/dunst/config &
+
+# Change the screen color
+#!/bin/sh
+
+# =====================
+# System Services & Daemons
+# =====================
+pgrep -x dictd || dictd &
+pgrep -x pipewire || pipewire &
+
+# =====================
+# Compositor & Display
+# =====================
+pgrep -x picom || picom &
+xrandr --dpi 96
+
+# =====================
+# Input & Authentication
+# =====================
+pgrep -x sxhkd || sxhkd -m -1 &
+pgrep -x polkitkdeauth || polkitkdeauth &
+setxkbmap -option caps:swapescape
+
+# =====================
+# Wallpaper & Appearance
+# =====================
+setbg ~/Pictures/Wallpapers
+pgrep -x redshift || redshift &
+
+# =====================
+# Audio & Media
+# =====================
+pgrep -x mpd || mpd
+pgrep -x mpdrand.sh || mpdrand.sh &
+pgrep -x mpd-notification || mpd-notification.sh &
+pgrep -x mpd-mpris || mpd-mpris &
+pgrep -x mpv-mpris || mpv-mpris &
+
+# =====================
+# Utilities & Handlers
+# =====================
+pgrep -x unclutter || unclutter &
+pgrep -x fuz-cache || fuz-cache &
+pgrep -x clipmenud || clipmenud &
+pgrep -x remapd || remapd &
+pgrep -x file-handler || file-handler &
+
+# =====================
+# Network & Device Management
+# =====================
+pgrep -x udiskie || udiskie &
+pgrep -x nm-applet || nm-applet --no-agent &
+bluetooth-autoconnect &
+
+# =====================
+# Notifications
+# =====================
+pidof -sx dunst || dunst -config "${XDG_CONFIG_HOME:-$HOME/.config}"/dunst/config &
+
+# =====================
+# Editor & Miscellaneous
+# =====================
+nvim --headless "+Lazy! load all" +qa &
+
+# =====================
+# Screen Locker & Reminders (unused-commented)
+# =====================
+#xset s 300 900 dpms 1300 1300 1300
+#pgrep -x xss-lock || xss-lock -n screensaver.sh -- slock &
+#pgrep -x fcitx5 || fcitx5 -d
+#pgrep -x remind || remind -z -k'notify-send %s; canberra-gtk-play -i complete' "$REMIND_DIR/timed.rem" &
+#pgrep -x yams || yams fm scrobbler
+#ash_hst_cleanup.sh
+#jellyfin-mpv-shim &&
+

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+icon=
+
+if [ ! -f ~/.cache/pacman_updates ]; then
+	updates=0
+else
+	updates=$(checkupdates | wc -l)
+	if [ "$updates" = "" ]; then
+		updates=0
+	fi
+fi
+
+checkupdates 2> /dev/null > ~/.cache/pacman_updates &
+
+case $BLOCK_BUTTON in
+	1) "$TERMINAL" -c center -n center -e bash -c 'sudo /bin/pacman -Syyu --noconfirm; echo "Press enter to exit..."; read' ;;
+	6) "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+
+#echo "$ifg $icon $tfg$(cat ~/.cache/pacman_updates)"
+echo "^c#a48ead^$icon ^d^ $updates"

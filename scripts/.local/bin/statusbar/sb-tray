@@ -1,0 +1,21 @@
+#!/bin/sh
+# ===========
+PANEL_FIFO="/tmp/panel.fifo"
+# system tray
+# ===========
+# ask xprop about the window width, then draw 3 spaces per slot
+# (the slot size is 20 as set in stalonetrayrc)
+[ -x "$(command -v xprop)" ] && \
+while :; do
+    if pgrep -x stalonetray; then
+        SLOT_SIZE=20
+        xprop -name stalonetray -f WM_SIZE_HINTS 32i ' $5\n' \
+            -spy WM_NORMAL_HINTS | while read -r dummy WIDTH; do
+            TRAYBAR=$(printf "%*s" $(( (WIDTH / SLOT_SIZE) * 3 )) )
+            printf "%b\n" "TRAY\037${TRAYBAR}"
+        done
+    else
+        printf "%s\n" "TRAY"
+        xdo id -N stalonetray -m || sleep 1
+    fi
+done > "$PANEL_FIFO" &

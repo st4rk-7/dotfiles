@@ -1,0 +1,12 @@
+{
+  "mascot": "mascot/akari2.png",
+  "font": "font/EFM.ttf",
+  "font_size": 14,
+  "thumb_size": 72,
+  "show_extra_metadata": true,
+  "player_path": "mpv",
+  "video_format": "1080p60",
+  "sub_language": "en",
+  "theme_path": "themes/ikatube_colortheme_bocchi.json",
+  "theme": "dark"
+}

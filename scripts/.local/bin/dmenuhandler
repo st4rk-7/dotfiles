@@ -1,0 +1,112 @@
+#!/bin/bash
+
+clipboard=$(xclip -o -selection clipboard 2>/dev/null)
+feed="${1:-$(true | dmenu -p 'Link: ' -it "$clipboard")}"
+[ -z "$feed" ] && exit 1
+
+filename_from_url() {
+  echo "$1" | sed 's|.*/||;s/%20/ /g;s/?source.*//'
+}
+
+ext_from_url() {
+  echo "$1" | awk -F. '{print tolower($NF)}' | sed 's/\?.*//'
+}
+
+is_torrent_url() {
+  [[ "$1" =~ \.torrent$ ]] || [[ "$1" =~ ^magnet: ]]
+}
+
+select_quality() {
+  choice=$(printf "Best\n360p\n480p\n720p\n1080p" | dmenu -i -p "Video quality:")
+  case "$choice" in
+  "360p") echo "bestvideo[height<=360]+bestaudio/best[height<=360]" ;;
+  "480p") echo "bestvideo[height<=480]+bestaudio/best[height<=480]" ;;
+  "720p") echo "bestvideo[height<=720]+bestaudio/best[height<=720]" ;;
+  "1080p") echo "bestvideo[height<=1080]+bestaudio/best[height<=1080]" ;;
+  *) echo "bestvideo+bestaudio/best" ;;
+  esac
+}
+
+download_in_terminal() {
+  local title="$1"
+  shift
+  setsid -f st -T "$title" -c "handler_output" -e bash -c "$1; notify-send \"$title ✓ Download complete\""
+}
+
+file_ext=$(ext_from_url "$feed")
+filename="/tmp/$(filename_from_url "$feed")"
+
+# Option labels with icons
+opt_copy="  Copy Selection"
+opt_play="  Play"
+opt_loop="  Play (loop)"
+opt_video="  Queue Video"
+opt_playlist="󰐑  Queue Playlist"
+opt_audio="  Queue Audio"
+opt_download="  Queue Download"
+opt_image="  Open Image"
+opt_pdf="  Open PDF"
+opt_bg="  Set Background"
+opt_browser="  Open in Browser"
+opt_search="  Search in Browser"
+opt_vim="  Open in Vim"
+
+# Compose options
+options="$opt_copy\n$opt_browser\n$opt_search"
+if echo "$feed" | grep -qiE 'youtube\.com|youtu\.be|vimeo\.com|peertube'; then
+  options="$opt_video\n$opt_audio\n$opt_playlist\n$opt_play\n$opt_loop\n$opt_download\n$options"
+else
+  case "$file_ext" in
+  jpg | jpeg | png | webp | gif | avif | tiff)
+    options="$opt_image\n$opt_bg\n$options"
+    options="$opt_download\n$options"
+    ;;
+  pdf)
+    options="$opt_pdf\n$options"
+    options="$opt_download\n$options"
+    ;;
+  mp3 | m4a | ogg | opus | flac | aac)
+    options="$opt_play\n$opt_loop\n$opt_download\n$options"
+    ;;
+  mp4 | webm | mkv | mov | flv)
+    options="$opt_play\n$opt_loop\n$opt_download\n$options"
+    ;;
+  *)
+    options="$opt_download\n$opt_vim\n$options"
+    ;;
+  esac
+fi
+
+# dmenu prompt
+choice=$(printf "$options" | dmenu -i -p "Action:")
+[ -z "$choice" ] && exit 0
+
+case "$choice" in
+"$opt_copy") echo "$feed" | xclip -selection clipboard ;;
+"$opt_play") setsid -f mpv -quiet "$feed" >/dev/null 2>&1 ;;
+"$opt_loop") setsid -f mpv -quiet --loop "$feed" >/dev/null 2>&1 ;;
+"$opt_video")
+  format=$(select_quality)
+  download_in_terminal "yt-dlp: Video" \
+    "yt-dlp --no-playlist -f \"$format\" -P \"$HOME/Downloads\" --embed-metadata -ic \"$feed\""
+  ;;
+"$opt_playlist")
+  format=$(select_quality)
+  download_in_terminal "yt-dlp: Playlist" \
+    "yt-dlp -f \"$format\" -P \"$HOME/Downloads\" --embed-metadata -ic \"$feed\""
+  ;;
+"$opt_audio")
+  download_in_terminal "yt-dlp: Audio" \
+    "yt-dlp --no-playlist -f bestaudio -P \"$HOME/Downloads\" --embed-metadata --restrict-filenames \"$feed\""
+  ;;
+"$opt_download")
+  download_dir="$HOME/Downloads"
+  setsid -f ariang-launcher --url "$feed" --dir "$download_dir" >/dev/null 2>&1
+  ;;
+"$opt_pdf") curl -sL "$feed" -o "$filename" && zathura "$filename" >/dev/null 2>&1 ;;
+"$opt_image") curl -sL "$feed" -o "$filename" && nsxiv -a "$filename" >/dev/null 2>&1 ;;
+"$opt_vim") curl -sL "$feed" -o "$filename" && setsid -f "$TERMINAL" -e "$EDITOR" "$filename" >/dev/null 2>&1 ;;
+"$opt_bg") curl -L "$feed" -o "$XDG_CACHE_HOME/pic" xwallpaper --zoom "$XDG_CACHE_HOME/pic" >/dev/null 2>&1 ;;
+"$opt_search") setsid -f "$BROWSER" -search "$feed" >/dev/null 2>&1 ;;
+"$opt_browser") setsid -f "$BROWSER" "$feed" >/dev/null 2>&1 ;;
+esac
