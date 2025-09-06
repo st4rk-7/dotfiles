@@ -16,3 +16,6 @@
 [submodule ".config/suckless/st"]
 	path = .config/suckless/st
 	url = https://github.com/st4rk-7/st.git
+[submodule "src/arch-install"]
+	path = src/arch-install
+	url = https://github.com/st4rk-7/arch-install
