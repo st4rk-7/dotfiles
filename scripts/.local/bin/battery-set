@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# This version doesn't ask for password (uses sudoers config)
+echo $1 | sudo tee /sys/class/power_supply/BAT0/charge_control_start_threshold > /dev/null
+echo $2 | sudo tee /sys/class/power_supply/BAT0/charge_control_end_threshold > /dev/null
+notify-send "Battery Mode" "Set to $1-$2%" -t 2000

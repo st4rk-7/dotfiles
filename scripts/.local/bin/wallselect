@@ -1,40 +1,88 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-is_process_running() {
-  pgrep -x "$1" >/dev/null
+# Wallpaper selection script with fzf menu and image preview
+# Works in bash and zsh without dwmc dependency
+
+# Default wallpaper directory
+WALLPAPER_DIR="${XDG_PICTURES_DIR:-$HOME/Pictures}/Wallpapers"
+BG_LOC="${XDG_DATA_HOME:-$HOME/.local/share}/bg"
+CACHE_DIR="/tmp/wallpaper_cache"
+
+# Create necessary directories
+mkdir -p "$WALLPAPER_DIR" "$(dirname "$BG_LOC")" "$CACHE_DIR"
+
+# Set wallpaper function
+set_wallpaper() {
+  local wallpaper="$1"
+  setbg "$wallpaper"
+}
+export -f set_wallpaper
+
+# Cache wallpapers
+cache_wallpapers() {
+  local dir="$1"
+  find "$dir" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.gif" -o -iname "*.bmp" -o -iname "*.tiff" -o -iname "*.webp" \) 2>/dev/null > "$CACHE_DIR/all"
+}
+export -f cache_wallpapers
+
+# Main function
+main() {
+  # Parse command line options
+  local search_dir="$WALLPAPER_DIR"
+
+  while getopts "d:" opt; do
+    case "$opt" in
+      d) search_dir="$OPTARG" ;;
+      *) echo "Usage: $0 [-d directory]"; exit 1 ;;
+    esac
+  done
+  shift $((OPTIND-1))
+
+  # If directory argument provided, use it instead of default
+  if [ $# -gt 0 ] && [ -d "$1" ]; then
+    search_dir="$1"
+  fi
+
+  # Check if fzf is available
+  if ! command -v fzf >/dev/null 2>&1; then
+    echo "Error: fzf is required but not installed." >&2
+    exit 1
+  fi
+
+  # Cache wallpapers
+  cache_wallpapers "$search_dir"
+
+  # Check if we have any wallpapers
+  if [ ! -s "$CACHE_DIR/all" ]; then
+    echo "No wallpapers found in $search_dir" >&2
+    exit 1
+  fi
+
+  # Use fzf to select wallpaper with preview
+  local selected
+  local selection_file
+  selection_file=$(mktemp)
+
+  # Simplified options to avoid font/rendering issues
+  export FZF_DEFAULT_OPTS="--prompt='Wallpapers > ' --height=100% --preview-window 'right:60%' --preview 'fuz-preview {}'"
+  st -c "floating-terminal" -g "100x30" -e bash -c "cat \"$CACHE_DIR/all\" | fzf --multi > \"$selection_file\""
+
+  # Read selection from temp file
+  selected=$(cat "$selection_file")
+  rm "$selection_file"
+
+  if [ -n "$selected" ]; then
+    # Handle multi-selection by taking the first line
+    first_selection=$(echo "$selected" | head -n 1)
+    if [ -f "$first_selection" ]; then
+      set_wallpaper "$first_selection"
+    else
+      echo "Selection is not a valid file."
+    fi
+  else
+    echo "No wallpaper selected."
+  fi
 }
 
-if is_process_running "dwm"; then
-  window_manager="dwm"
-elif is_process_running "awesome"; then
-  window_manager="awesome"
-else
-  window_manager="unknown"
-fi
-
-set -e
-WALLPAPER_PATH="$HOME/Pictures/wallpapers/"
-DMENU="$(ls $WALLPAPER_PATH | dmenu -p "Set Wallpaper:" -l 20)"
-SELECTED="$WALLPAPER_PATH$DMENU"
-if [ -z "$DMENU"]; then
-	exit 0
-else
-    wal -i $SELECTED
-    sed -i ~/.Xresources -re '1,1000d'
-    cat ~/.cache/wal/colors.Xresources >> ~/.Xresources
-    oomox-cli /opt/oomox/scripted_colors/xresources/xresources-reverse
-    wal-telegram -t
-    pywalfox update
-    killall dunst && dunst &
-
-    if [ "$window_manager" = "dwm" ]; then
-      killall dwm
-      dwmblocks &
-    elif [ "$window_manager" = "awesome" ]; then
-      pkill -HUP awesome
-	  picom --experimental-backends
-    fi
-
-    pkill sxiv
-    notify-send "Enjoy your new colorscheme!"
-fi
+# Run main function with all arguments
+main "$@"

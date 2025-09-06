@@ -36,7 +36,7 @@ killall dunst && dunst & >/dev/null 2>&1
 
 cp "$THEME_PATH/fzf" "$HOME/.config/shell/fzf"
 
-setbg -s "$THEME_PATH/wallpapers"
+setbg
 
 # Neovim Lua theme file
 NVIM_THEME_DEST="$HOME/.config/nvim/lua/plugins/ui/theme.lua"

@@ -174,6 +174,19 @@ update_betterfox() {
       warn "Firefox profile path not found, skipping."
     fi
   done
+
+  info "Installing ArcWTF theme"
+  ARCWTF_URL="https://github.com/KiKaraage/ArcWTF.git"
+  TMP_DIR=$(mktemp -d)
+  git clone "$ARCWTF_URL" "$TMP_DIR"
+  for profile in "$PROFILE_PATH_DEFAULT_RELEASE" "$PROFILE_PATH_OLDDEFAULT"; do
+    if [ -n "$profile" ] && [ -d "$profile" ]; then
+      info "Installing ArcWTF theme in profile: $profile"
+      cp -r "$TMP_DIR/chrome" "$profile/"
+    fi
+  done
+  rm -rf "$TMP_DIR"
+  success "ArcWTF theme installed"
 }
 
 update_voidrice() {
