@@ -8,7 +8,7 @@
 # Zsh private configuration
 shell/.config/zsh/private.zsh
 shell/.config/zsh/.zhistory
-
+shell/.config/zsh/.zcompdump
 # Sensitive files and directories
 # History files
 .bash_history
