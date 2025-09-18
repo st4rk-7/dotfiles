@@ -9,12 +9,6 @@ local buttons = {
 }
 
 ---@param name string
----@return ButtonData
-function buttons:get(name)
-	return self.data[name] or {icon = 'help_center', tooltip = 'Uninitialized button "' .. name .. '"'}
-end
-
----@param name string
 ---@param callback fun(data: ButtonData)
 function buttons:subscribe(name, callback)
 	local pool = self.subscribers[name]
@@ -23,6 +17,7 @@ function buttons:subscribe(name, callback)
 		self.subscribers[name] = pool
 	end
 	pool[#pool + 1] = callback
+	self:trigger(name)
 	return function() buttons:unsubscribe(name, callback) end
 end
 
@@ -41,8 +36,8 @@ end
 ---@param name string
 function buttons:trigger(name)
 	local pool = self.subscribers[name]
+	local data = self.data[name] or {icon = 'help_center', tooltip = 'Uninitialized button "' .. name .. '"'}
 	if pool then
-		local data = self:get(name)
 		for _, callback in ipairs(pool) do callback(data) end
 	end
 end

@@ -27,22 +27,23 @@ function char_conv(chars, use_ligature, has_separator)
 	local separator = has_separator or ' '
 	local length = 0
 	local char_conv, sp, cache = {}, {}, {}
-	local roman_list = {}
 	local chars_length = utf8_length(chars)
 	local concat = table.concat
 	for _, char in utf8_iter(chars) do
-		local match = romanization[char] or char
-		roman_list[#roman_list + 1] = match
 		if use_ligature then
-			char_conv[#char_conv + 1] = match
+			if #char == 1 then
+				char_conv[#char_conv + 1] = char
+			else
+				char_conv[#char_conv + 1] = romanization[char] or char
+			end
 		else
 			length = length + 1
 			if #char <= 2 then
 				if (char ~= ' ' and length ~= chars_length) then
-					cache[#cache + 1] = match
+					cache[#cache + 1] = romanization[char] or char
 				elseif (char == ' ' or length == chars_length) then
 					if length == chars_length then
-						cache[#cache + 1] = match
+						cache[#cache + 1] = romanization[char] or char
 					end
 					sp[#sp + 1] = concat(cache)
 					itable_clear(cache)
@@ -52,14 +53,14 @@ function char_conv(chars, use_ligature, has_separator)
 					sp[#sp + 1] = concat(cache)
 					itable_clear(cache)
 				end
-				sp[#sp + 1] = match
+				sp[#sp + 1] = romanization[char] or char
 			end
 		end
 	end
 	if use_ligature then
-		return concat(char_conv), roman_list
+		return concat(char_conv)
 	else
-		return concat(sp, separator), roman_list
+		return concat(sp, separator)
 	end
 end
 

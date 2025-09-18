@@ -1,4 +1,5 @@
-
 *.log
 *.cache
 cache/
+mpvHistory.log
+memo-history.log

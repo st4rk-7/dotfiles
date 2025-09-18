@@ -10,6 +10,7 @@ shell/.config/zsh/private.zsh
 shell/.config/zsh/.zhistory
 shell/.config/zsh/.zcompdump
 shell/.config/fish/config.d/secret.fish
+
 # Sensitive files and directories
 # History files
 .bash_history
@@ -25,6 +26,7 @@ shell/.config/fish/config.d/secret.fish
 *.swp
 *cache*
 *log*
+*.ffmetadata
 
 # Clipboard history (common locations/patterns)
 .local/share/clipmenu/
