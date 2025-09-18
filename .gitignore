@@ -9,6 +9,7 @@
 shell/.config/zsh/private.zsh
 shell/.config/zsh/.zhistory
 shell/.config/zsh/.zcompdump
+shell/.config/fish/config.d/secret.fish
 # Sensitive files and directories
 # History files
 .bash_history
