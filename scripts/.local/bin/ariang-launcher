@@ -1,103 +1,111 @@
 #!/bin/bash
-
 # --- CONFIG ---
 ARIA2_PORT=6800
 ARIA2_RPC_URL="http://localhost:$ARIA2_PORT/jsonrpc"
 DEFAULT_DOWNLOAD_DIR="$HOME/Downloads"
-
 # --- ARGUMENTS ---
 DOWNLOAD_URL=""
 DOWNLOAD_DIR="$DEFAULT_DOWNLOAD_DIR"
-
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-  --url)
+# Parse URL if provided as argument
+if [[ -n "$1" && ! "$1" =~ ^-- ]]; then
+    DOWNLOAD_URL="$1"
+elif [[ "$1" == "--url" && -n "$2" ]]; then
     DOWNLOAD_URL="$2"
-    shift 2
-    ;;
-  --dir)
+    shift
+fi
+# Handle --dir option
+if [[ "$1" == "--dir" && -n "$2" ]]; then
     DOWNLOAD_DIR="$2"
-    shift 2
-    ;;
-  *)
-    notify-send " Aria2 Launcher" "Unknown argument: $1"
-    exit 1
-    ;;
-  esac
-done
-
+fi
 for cmd in aria2c ariang-allinone jq curl ss notify-send; do
   command -v "$cmd" >/dev/null || {
-    notify-send " Aria2 Launcher" "Missing dependency: $cmd"
+    notify-send " Aria2 Launcher" "Missing dependency: $cmd"
     exit 1
   }
 done
-
 # --- FUNCTIONS ---
-
 is_aria2c_running() {
   ss -tln | grep -q ":$ARIA2_PORT"
 }
-
 is_rpc_active() {
   ss -tn state ESTABLISHED '( sport = :6800 )' | grep -q ":6800"
 }
-
 aria2_rpc_add() {
   local url="$1"
   local dir="$2"
   local json
-
   json=$(jq -nc \
     --arg url "$url" \
     --arg dir "$dir" \
     '{"jsonrpc":"2.0","id":"q","method":"aria2.addUri","params":[[$url], {"dir":$dir}]}')
-
   if curl -s -d "$json" "$ARIA2_RPC_URL" >/dev/null; then
-    notify-send "󰇚 Aria2: Download added" "$url"
+    notify-send "󰇚 Aria2: Download added" "$(echo "$url" | cut -c1-50)"
+    return 0
   else
-    notify-send " Aria2: Failed to add download" "$url"
+    notify-send " Aria2: Failed to add download" "$(echo "$url" | cut -c1-50)"
+    return 1
   fi
 }
-
-# --- MAIN ---
-
-# Start aria2c if not already running
-ARIA2_STARTED_BY_SCRIPT=false
-if is_aria2c_running; then
-  notify-send "󰄛 Aria2c already running"
-else
-  aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all=true --rpc-listen-port=$ARIA2_PORT &
-  ARIA2_PID=$!
-  ARIA2_STARTED_BY_SCRIPT=true
-  echo "Started aria2c (PID $ARIA2_PID)"
-  notify-send "󰄛 Aria2: RPC started"
-  sleep 2
-  # Launch AriaNg UI
-  ariang-allinone &
-  notify-send "󰄛 AriaNg Launched"
-fi
-
-# Add download if URL is provided
-if [[ -n "$DOWNLOAD_URL" ]]; then
-  aria2_rpc_add "$DOWNLOAD_URL" "$DOWNLOAD_DIR"
-fi
-
-# Monitor RPC port only if we started aria2c
-if [ "$ARIA2_STARTED_BY_SCRIPT" = true ]; then
-  for i in {1..10}; do
-    if is_rpc_active; then
-      break
-    fi
-    sleep 1
-  done
-
-  # Now monitor until all clients disconnect
-  while is_rpc_active; do
+start_aria2() {
+  if is_aria2c_running; then
+    echo "󰄛 Aria2c already running"
+    return 0
+  else
+    aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all=true --rpc-listen-port=$ARIA2_PORT &
+    ARIA2_PID=$!
+    echo "Started aria2c (PID $ARIA2_PID)"
+    notify-send "󰄛 Aria2: RPC started"
     sleep 2
-  done
-
-  kill "$ARIA2_PID"
-  wait "$ARIA2_PID" 2>/dev/null
-  notify-send "󰗼 Aria2: RPC stopped"
+    return 1
+  fi
+}
+get_url_from_dmenu() {
+  # Try to get URL from clipboard first
+  local clipboard_url=$(xclip -selection clipboard -o 2>/dev/null)
+  
+  # Check if clipboard contains a URL
+  if [[ "$clipboard_url" =~ ^(https?|ftp|magnet):// ]]; then
+    echo "$clipboard_url"
+    return 0
+  fi
+  
+  # If no URL in clipboard, ask via dmenu
+  local url=$(echo "" | dmenu -p "Enter download URL:" -l 3)
+  echo "$url"
+}
+# --- MAIN ---
+# If URL provided as argument, use it
+if [[ -n "$DOWNLOAD_URL" ]]; then
+    echo "Using provided URL: $DOWNLOAD_URL"
+else
+    # Try to get URL from dmenu
+    DOWNLOAD_URL=$(get_url_from_dmenu)
+fi
+if [[ -n "$DOWNLOAD_URL" ]]; then
+    # We have a download URL - start aria2 and add it
+    WAS_STARTED=$(start_aria2 && echo "false" || echo "true")
+    
+    echo "Adding download: $DOWNLOAD_URL"
+    aria2_rpc_add "$DOWNLOAD_URL" "$DOWNLOAD_DIR"
+    
+    # If we started aria2, monitor and auto-close
+    if [ "$WAS_STARTED" = "true" ]; then
+        for i in {1..10}; do
+            if is_rpc_active; then
+                break
+            fi
+            sleep 1
+        done
+        # Monitor until all clients disconnect
+        while is_rpc_active; do
+            sleep 2
+        done
+        kill "$ARIA2_PID"
+        wait "$ARIA2_PID" 2>/dev/null
+        notify-send "󰗼 Aria2: RPC stopped"
+    fi
+else
+    # No download URL - just exit cleanly
+    echo "No download URL provided, exiting"
+    exit 0
 fi
