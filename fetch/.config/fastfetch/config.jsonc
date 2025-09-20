@@ -1,95 +1,84 @@
+// Inspired by Catnap
 {
-    "logo": {
-        "source": "$(find \"${XDG_CONFIG_HOME:-$HOME/.config}/fastfetch/pngs/\" -name \"*.jpg\" | sort -R | head -1)",
-        "height": 18
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "height": 12,
+    "padding": {
+      "top": 1,
     },
-    "display": {
-        "separator": " : "
+  },
+  "display": {
+    "separator": " ",
+  },
+  "modules": [
+    {
+      "key": "╭───────────╮",
+      "type": "custom",
     },
-    "modules": [
-        {
-            "type": "custom",
-            "format": "\u001b[36m    コンピューター"
-        },
-        {
-            "type": "custom",
-            "format": "┌──────────────────────────────────────────┐"
-        },
-        {
-            "type": "os",
-            "key": "   OS",
-            "keyColor": "red"
-        },
-        {
-            "type": "kernel",
-            "key": "   Kernel",
-            "keyColor": "red"
-        },
-        {
-            "type": "packages",
-            "key": "   Packages",
-            "keyColor": "green"
-        },
-        {
-            "type": "display",
-            "key": "   Display",
-            "keyColor": "green"
-        },
-        {
-            "type": "wm",
-            "key": "   WM",
-            "keyColor": "yellow"
-        },
-        {
-            "type": "terminal",
-            "key": "   Terminal",
-            "keyColor": "yellow"
-        },
-        {
-            "type": "custom",
-            "format": "└──────────────────────────────────────────┘"
-        },
-        "break",
-        {
-            "type": "title",
-            "key": "  "
-        },
-        {
-            "type": "custom",
-            "format": "┌──────────────────────────────────────────┐"
-        },
-        {
-            "type": "cpu",
-            "format": "{1}",
-            "key": "   CPU",
-            "keyColor": "blue"
-        },
-        {
-            "type": "gpu",
-            "key": "   GPU",
-            "keyColor": "blue"
-        },
-        {
-            "type": "gpu",
-            "format": "{3}",
-            "key": "   GPU Driver",
-            "keyColor": "magenta"
-        },
-        {
-            "type": "memory",
-            "key": "  ﬙ Memory",
-            "keyColor": "magenta"
-        },
-        {
-            "type": "custom",
-            "format": "└──────────────────────────────────────────┘"
-        },
-        "break",
-        {
-            "type": "colors",
-            "paddingLeft": 2,
-            "symbol": "circle"
-        },
-        "break"
-    ]
+    {
+      "key": "│ {#31} user    {#keys}│",
+      "type": "title",
+      "format": "{user-name}",
+    },
+    {
+      "key": "│ {#32}󰇅 hname   {#keys}│",
+      "type": "title",
+      "format": "{host-name}",
+    },
+    {
+      "key": "│ {#33}󰅐 uptime  {#keys}│",
+      "type": "uptime",
+    },
+    {
+      "key": "│ {#34}{icon} distro  {#keys}│",
+      "type": "os",
+    },
+    {
+      "key": "│ {#35} kernel  {#keys}│",
+      "type": "kernel",
+    },
+    {
+      "key": "│ {#36} wm      {#keys}│",
+      "type": "wm",
+    },
+    {
+      "key": "│ {#36}󰇄 desktop {#keys}│",
+      "type": "de",
+    },
+    {
+      "key": "│ {#31} term    {#keys}│",
+      "type": "terminal",
+    },
+    {
+      "key": "│ {#32} shell   {#keys}│",
+      "type": "shell",
+    },
+    {
+      "key": "│ {#33}󰍛 cpu     {#keys}│",
+      "type": "cpu",
+      "showPeCoreCount": true,
+    },
+    {
+      "key": "│ {#34}󰉉 disk    {#keys}│",
+      "type": "disk",
+      "folders": "/",
+    },
+    {
+      "key": "│ {#36} memory  {#keys}│",
+      "type": "memory",
+    },
+    {
+      "key": "├───────────┤",
+      "type": "custom",
+    },
+    {
+      "key": "│ {#39} colors  {#keys}│",
+      "type": "colors",
+      "symbol": "circle",
+    },
+    {
+      "key": "╰───────────╯",
+      "type": "custom",
+    },
+  ],
 }
