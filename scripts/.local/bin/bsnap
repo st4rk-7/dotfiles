@@ -1,0 +1,453 @@
+#!/bin/bash
+# btrfs-snap-manager - Simple btrfs snapshot management with dmenu
+
+set -e
+
+# Configuration
+BTRFS_ROOT="/dev/nvme0n1p3"
+SNAPSHOT_DIR="/.snapshots"
+KEEP_SNAPSHOTS=3
+
+# Dmenu configuration
+DMENU_CMD="dmenu -c -i -l 15 -bw 2"
+DMENU_PASS="dmenu -P -p"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+# Logging functions
+log_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
+log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
+log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+
+# Check and acquire sudo privileges
+check_sudo() {
+    if [[ $EUID -ne 0 ]]; then
+        log_info "Requesting sudo privileges..."
+        if ! sudo -v; then
+            log_error "Failed to acquire sudo privileges"
+            exit 1
+        fi
+    fi
+}
+
+# Run command with sudo
+run_sudo() {
+    if [[ $EUID -eq 0 ]]; then
+        "$@"
+    else
+        sudo "$@"
+    fi
+}
+
+# Create snapshot directory if needed
+setup_snapshot_dir() {
+    if [[ ! -d "$SNAPSHOT_DIR" ]]; then
+        log_info "Creating snapshot directory: $SNAPSHOT_DIR"
+        run_sudo mkdir -p "$SNAPSHOT_DIR"
+    fi
+}
+
+# Create snapshot
+create_snapshot() {
+    local subvol=$1
+    local timestamp=$(date +"%Y%m%d_%H%M%S")
+    local snap_name="${subvol}_${timestamp}"
+    local snap_path="${SNAPSHOT_DIR}/${snap_name}"
+    
+    log_info "Creating snapshot: $snap_name"
+    
+    case $subvol in
+        "@")
+            run_sudo btrfs subvolume snapshot -r "/" "$snap_path"
+            ;;
+        "@home")
+            run_sudo btrfs subvolume snapshot -r "/home" "$snap_path"
+            ;;
+        "@var")
+            run_sudo btrfs subvolume snapshot -r "/var" "$snap_path"
+            ;;
+        *)
+            log_error "Unknown subvolume: $subvol"
+            return 1
+            ;;
+    esac
+    
+    if [[ $? -eq 0 ]]; then
+        log_info "Snapshot created: $snap_path"
+        return 0
+    else
+        log_error "Failed to create snapshot: $snap_path"
+        return 1
+    fi
+}
+
+# Create all snapshots
+create_all_snapshots() {
+    check_sudo
+    setup_snapshot_dir
+    
+    log_info "Creating snapshots for all system subvolumes..."
+    local success_count=0
+    local total_count=0
+    
+    for subvol in "@" "@home" "@var"; do
+        total_count=$((total_count + 1))
+        if create_snapshot "$subvol"; then
+            success_count=$((success_count + 1))
+        fi
+    done
+    
+    if [[ $success_count -eq $total_count ]]; then
+        show_dmenu_message "Created $success_count snapshots"
+        cleanup_old_snapshots
+    elif [[ $success_count -gt 0 ]]; then
+        show_dmenu_message "Created $success_count/$total_count snapshots"
+        cleanup_old_snapshots
+    else
+        show_dmenu_message "Failed to create snapshots"
+    fi
+}
+
+# List snapshots
+list_snapshots() {
+    if [[ -d "$SNAPSHOT_DIR" ]]; then
+        run_sudo find "$SNAPSHOT_DIR" -maxdepth 1 -name "@*" -type d -printf "%f\n" | sort
+    else
+        echo "No snapshots found"
+    fi
+}
+
+# Delete specific snapshot
+delete_snapshot() {
+    local snap_path=$1
+    if [[ -d "$snap_path" ]]; then
+        log_info "Deleting snapshot: $snap_path"
+        run_sudo btrfs subvolume delete "$snap_path"
+        return $?
+    else
+        log_error "Snapshot not found: $snap_path"
+        return 1
+    fi
+}
+
+# Interactive snapshot deletion via dmenu
+delete_snapshot_interactive() {
+    check_sudo
+    
+    if [[ ! -d "$SNAPSHOT_DIR" ]]; then
+        show_dmenu_message "No snapshots found"
+        return
+    fi
+    
+    local snaps=($(list_snapshots))
+    
+    if [[ ${#snaps[@]} -eq 0 ]]; then
+        show_dmenu_message "No snapshots available"
+        return
+    fi
+    
+    local selected=$(printf "%s\n" "${snaps[@]}" | eval "$DMENU_CMD -p 'Select snapshot to delete:'")
+    
+    if [[ -n "$selected" ]]; then
+        local snap_path="${SNAPSHOT_DIR}/${selected}"
+        if show_dmenu_confirm "Delete snapshot: $selected?"; then
+            if delete_snapshot "$snap_path"; then
+                show_dmenu_message "Deleted: $selected"
+            else
+                show_dmenu_message "Failed to delete: $selected"
+            fi
+        else
+            show_dmenu_message "Deletion cancelled"
+        fi
+    fi
+}
+
+# Cleanup old snapshots
+cleanup_old_snapshots() {
+    check_sudo
+    log_info "Cleaning up old snapshots (keeping $KEEP_SNAPSHOTS)..."
+    
+    local removed_count=0
+    
+    for subvol in "@" "@home" "@var"; do
+        local snaps=($(run_sudo find "$SNAPSHOT_DIR" -maxdepth 1 -name "${subvol}_*" -type d -printf "%f\n" | sort -r))
+        local count=${#snaps[@]}
+        
+        if [[ $count -gt $KEEP_SNAPSHOTS ]]; then
+            for ((i=KEEP_SNAPSHOTS; i<count; i++)); do
+                local snap_path="${SNAPSHOT_DIR}/${snaps[$i]}"
+                log_info "Removing old snapshot: ${snaps[$i]}"
+                if run_sudo btrfs subvolume delete "$snap_path"; then
+                    removed_count=$((removed_count + 1))
+                fi
+            done
+        fi
+    done
+    
+    if [[ $removed_count -gt 0 ]]; then
+        show_dmenu_message "Cleaned up $removed_count old snapshots"
+    else
+        show_dmenu_message "No old snapshots to clean up"
+    fi
+}
+
+# Show disk usage
+show_disk_usage() {
+    check_sudo
+    if [[ -d "$SNAPSHOT_DIR" ]]; then
+        echo "=== Total Snapshot Usage ==="
+        run_sudo du -sh "$SNAPSHOT_DIR"
+        echo
+        echo "=== Individual Snapshots ==="
+        run_sudo find "$SNAPSHOT_DIR" -maxdepth 1 -name "@*" -type d -exec du -sh {} \; | sort -hr
+    else
+        echo "No snapshots directory found"
+    fi
+}
+
+# Scrub operations
+start_scrub() {
+    check_sudo
+    log_info "Starting btrfs scrub..."
+    
+    if run_sudo btrfs scrub start /; then
+        show_dmenu_message "Scrub started successfully"
+        return 0
+    else
+        show_dmenu_message "Failed to start scrub"
+        return 1
+    fi
+}
+
+scrub_status() {
+    check_sudo
+    run_sudo btrfs scrub status /
+}
+
+cancel_scrub() {
+    check_sudo
+    if run_sudo btrfs scrub cancel /; then
+        show_dmenu_message "Scrub cancelled"
+    else
+        show_dmenu_message "No scrub in progress"
+    fi
+}
+
+# Balance operations
+start_balance() {
+    check_sudo
+    
+    local balance_options=(
+        "Quick balance (dusage=10)"
+        "Normal balance (dusage=50)" 
+        "Aggressive balance (dusage=80)"
+        "Metadata only (musage=50)"
+        "Cancel"
+    )
+    
+    local choice=$(printf "%s\n" "${balance_options[@]}" | eval "$DMENU_CMD -p 'Select balance type:'")
+    
+    case "$choice" in
+        "Quick balance (dusage=10)")
+            log_info "Starting quick balance..."
+            if run_sudo btrfs balance start -dusage=10 -musage=10 /; then
+                show_dmenu_message "Quick balance completed"
+            else
+                show_dmenu_message "Balance failed"
+            fi
+            ;;
+        "Normal balance (dusage=50)")
+            log_info "Starting normal balance..."
+            if run_sudo btrfs balance start -dusage=50 -musage=50 /; then
+                show_dmenu_message "Normal balance completed"
+            else
+                show_dmenu_message "Balance failed"
+            fi
+            ;;
+        "Aggressive balance (dusage=80)")
+            log_info "Starting aggressive balance..."
+            if run_sudo btrfs balance start -dusage=80 -musage=80 /; then
+                show_dmenu_message "Aggressive balance completed"
+            else
+                show_dmenu_message "Balance failed"
+            fi
+            ;;
+        "Metadata only (musage=50)")
+            log_info "Starting metadata balance..."
+            if run_sudo btrfs balance start -musage=50 /; then
+                show_dmenu_message "Metadata balance completed"
+            else
+                show_dmenu_message "Balance failed"
+            fi
+            ;;
+        *)
+            show_dmenu_message "Balance cancelled"
+            ;;
+    esac
+}
+
+balance_status() {
+    check_sudo
+    run_sudo btrfs balance status /
+}
+
+cancel_balance() {
+    check_sudo
+    if run_sudo btrfs balance cancel /; then
+        show_dmenu_message "Balance cancelled"
+    else
+        show_dmenu_message "No balance in progress"
+    fi
+}
+
+# Show dmenu message
+show_dmenu_message() {
+    local message="$1"
+    echo "$message" | eval "$DMENU_CMD -p 'Info:'"
+}
+
+# Show confirmation dialog
+show_dmenu_confirm() {
+    local message="$1"
+    local response=$(echo -e "Yes\nNo" | eval "$DMENU_CMD -p \"$message\"")
+    [[ "$response" == "Yes" ]]
+}
+
+# Scrub submenu
+show_scrub_menu() {
+    local scrub_options=(
+        "Start scrub"
+        "Scrub status" 
+        "Cancel scrub"
+        "Back to main"
+    )
+    
+    while true; do
+        local choice=$(printf "%s\n" "${scrub_options[@]}" | eval "$DMENU_CMD -p 'Scrub Operations:'")
+        
+        case "$choice" in
+            "Start scrub")
+                if show_dmenu_confirm "Start filesystem scrub? (This may take a while)"; then
+                    start_scrub
+                fi
+                ;;
+            "Scrub status")
+                scrub_status > /tmp/bsnap_scrub.txt
+                eval "$DMENU_CMD -p 'Scrub Status:' < /tmp/bsnap_scrub.txt"
+                ;;
+            "Cancel scrub")
+                if show_dmenu_confirm "Cancel running scrub?"; then
+                    cancel_scrub
+                fi
+                ;;
+            "Back to main"|"")
+                break
+                ;;
+        esac
+    done
+}
+
+# Balance submenu
+show_balance_menu() {
+    local balance_options=(
+        "Start balance"
+        "Balance status"
+        "Cancel balance" 
+        "Back to main"
+    )
+    
+    while true; do
+        local choice=$(printf "%s\n" "${balance_options[@]}" | eval "$DMENU_CMD -p 'Balance Operations:'")
+        
+        case "$choice" in
+            "Start balance")
+                start_balance
+                ;;
+            "Balance status")
+                balance_status > /tmp/bsnap_balance.txt
+                eval "$DMENU_CMD -p 'Balance Status:' < /tmp/bsnap_balance.txt"
+                ;;
+            "Cancel balance")
+                if show_dmenu_confirm "Cancel running balance?"; then
+                    cancel_balance
+                fi
+                ;;
+            "Back to main"|"")
+                break
+                ;;
+        esac
+    done
+}
+
+# Main dmenu interface
+show_dmenu() {
+    # Pre-acquire sudo at start
+    check_sudo
+    
+    local main_options=(
+        "Create all snapshots"
+        "List snapshots"
+        "Delete snapshot"
+        "Cleanup old snapshots"
+        "Show disk usage"
+        "Scrub operations"
+        "Balance operations"
+        "Quit"
+    )
+    
+    while true; do
+        local choice=$(printf "%s\n" "${main_options[@]}" | eval "$DMENU_CMD -p 'Btrfs Manager:'")
+        
+        case "$choice" in
+            "Create all snapshots")
+                if show_dmenu_confirm "Create snapshots for @, @home, and @var?"; then
+                    create_all_snapshots
+                fi
+                ;;
+            "List snapshots")
+                list_snapshots > /tmp/bsnap_list.txt
+                if [[ -s /tmp/bsnap_list.txt ]]; then
+                    eval "$DMENU_CMD -p 'Snapshots:' < /tmp/bsnap_list.txt"
+                else
+                    show_dmenu_message "No snapshots found"
+                fi
+                ;;
+            "Delete snapshot")
+                delete_snapshot_interactive
+                ;;
+            "Cleanup old snapshots")
+                if show_dmenu_confirm "Remove old snapshots? (Keeps $KEEP_SNAPSHOTS newest of each type)"; then
+                    cleanup_old_snapshots
+                fi
+                ;;
+            "Show disk usage")
+                show_disk_usage > /tmp/bsnap_usage.txt
+                eval "$DMENU_CMD -p 'Disk Usage:' < /tmp/bsnap_usage.txt"
+                ;;
+            "Scrub operations")
+                show_scrub_menu
+                ;;
+            "Balance operations")
+                show_balance_menu
+                ;;
+            "Quit"|"")
+                break
+                ;;
+        esac
+    done
+}
+
+# Only allow dmenu usage
+if [[ "${1:-}" == "dmenu" ]]; then
+    show_dmenu
+else
+    echo "This script only supports dmenu interface."
+    echo "Usage: $0 dmenu"
+    echo
+    echo "Note: Run with 'bsnap dmenu' for interactive interface"
+    exit 1
+fi
