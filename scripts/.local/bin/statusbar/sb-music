@@ -1,43 +1,57 @@
-#!/bin/bash
-# Based on https://aur.archlinux.org/packages/playerctl/
+#!/bin/sh
+# Display currently playing music.
 
-INSTANCE="${BLOCK_INSTANCE}"
+case "$BLOCK_BUTTON" in
+    1) musicctl prev ;;
+    2) musicctl toggle ;;
+    3) musicctl next ;;
+    4) musicctl seek +5 ;;
+    5) musicctl seek -5 ;;
+    6) terminal -e "$EDITOR" "$0" ;;
+esac
 
-if [[ "${INSTANCE}" != "" ]]; then
-  ARGUMENTS="--ignore-player=mpd --player  ${INSTANCE}"
-  ps -e | grep "${INSTANCE}" &> /dev/null
+get_player() {
+    playing_player=""
+    paused_player=""
+    for player in $(playerctl -l 2>/dev/null); do
+        status=$(playerctl --player="$player" status 2>/dev/null)
+        if [ "$status" = "Playing" ]; then
+            playing_player="$player"
+            break
+        elif [ "$status" = "Paused" ]; then
+            paused_player="$player"
+        fi
+    done
+
+    if [ -n "$playing_player" ]; then
+        echo "$playing_player"
+    elif [ -n "$paused_player" ]; then
+        echo "$paused_player"
+    fi
+}
+
+PLAYER=$(get_player)
+
+if [ -z "$PLAYER" ]; then
+    exit 1
 fi
-if [ $? == 1 ]; then
-    exit 0
+
+status="$(playerctl --player="$PLAYER" --no-messages status)" || exit 1
+case "$status" in
+    Stopped) exit ;;
+    Paused) icon="" ;;
+    Playing) icon="󰝚" ;;
+esac
+
+song="$(playerctl --player="$PLAYER" metadata --format='{{title}} - {{artist}}')" || exit 2
+
+# Set your desired maximum length
+maxlen=15
+
+# Check if the song string is longer than the max length
+if [ ${#song} -gt $maxlen ]; then
+    # If it is, truncate it with `cut` and add an ellipsis
+    song=$(echo "$song" | cut -c 1-"$maxlen")...
 fi
 
-ICON_PLAY="➤"
-ICON_PAUSE="Ⅱ"
-ICON_STOP="≠"
-CUR_ICON=""
-
-if [[ "${BLOCK_BUTTON}" -eq 1 ]]; then
-    $(playerctl ${ARGUMENTS} previous)
-elif [[ "${BLOCK_BUTTON}" -eq 2 ]]; then
-    $(playerctl ${ARGUMENTS} play-pause)
-elif [[ "${BLOCK_BUTTON}" -eq 3 ]]; then
-    $(playerctl ${ARGUMENTS} next)
-fi
-
-PLAYER_STATUS=$(playerctl ${ARGUMENTS} status)
-INFO_TITLE=$(playerctl ${ARGUMENTS} metadata title)
-INFO_ALBUM=$(playerctl ${ARGUMENTS} metadata album)
-INFO_ARTIST=$(playerctl ${ARGUMENTS} metadata artist)
-
-if [[ "${PLAYER_STATUS}" = "Paused" ]]; then
-  CUR_ICON="${ICON_PAUSE}"
-elif [[ "${PLAYER_STATUS}" = "Playing" ]]; then
-  CUR_ICON="${ICON_PLAY}"
-else
-  CUR_ICON="${ICON_STOP}"
-fi
-
-if [[ "${INFO_TITLE}" != "" ]] && [[ "${INFO_ARTIST}" != "" ]]; then
-  echo "${INFO_ARTIST} - ${INFO_TITLE} ${CUR_ICON}"
-  echo "${INFO_ARTIST} - ${INFO_TITLE} ${CUR_ICON}"
-fi
+echo "$icon $song"

@@ -1,0 +1,44 @@
+#!/bin/sh
+# Wrapper script for controlling music across MPRIS players.
+# It mimics the CLI arguments of mpc.
+
+set -eu
+
+get_player() {
+    playing_player=""
+    paused_player=""
+    for player in $(playerctl -l 2>/dev/null); do
+        status=$(playerctl --player="$player" status 2>/dev/null)
+        if [ "$status" = "Playing" ]; then
+            playing_player="$player"
+            break
+        elif [ "$status" = "Paused" ]; then
+            paused_player="$player"
+        fi
+    done
+
+    if [ -n "$playing_player" ]; then
+        echo "$playing_player"
+    elif [ -n "$paused_player" ]; then
+        echo "$paused_player"
+    fi
+}
+
+PLAYER=$(get_player)
+
+# shellcheck disable=2086
+case "$1" in
+    seek | volume)
+        [ "$1" = "seek" ] && subcmd="position"
+        set -- "${subcmd:-"$1"}" "${2#?}${2%%[[:digit:]]*}"
+        ;;
+    toggle) set -- play-pause ;;
+    prev) set -- previous ;;
+    current) set -- status ;;
+esac
+
+if [ -n "$PLAYER" ]; then
+    exec playerctl --player="$PLAYER" "$@"
+else
+    exec playerctl "$@"
+fi
