@@ -1,0 +1,45 @@
+#!/bin/sh
+
+current_profile=$(powerprofilesctl get)
+
+case "$current_profile" in
+  "performance")
+    icon=" 󰓅 " # Lightning bolt
+    ;;
+  "balanced")
+    icon=" 󰾅 " # Leaf/Balance
+    ;;
+  "power-saver")
+    icon=" 󰾆 " # Battery/Power Saver
+    ;;
+  *)
+    icon="?" # Unknown
+    ;;
+esac
+
+case $BLOCK_BUTTON in
+  1) # Left click: Cycle through profiles
+    case "$current_profile" in
+      "performance")
+        powerprofilesctl set balanced
+        notify-send "Power Profile" "Switched to Balanced"
+        ;;
+      "balanced")
+        powerprofilesctl set power-saver
+        notify-send "Power Profile" "Switched to Power Saver"
+        ;;
+      "power-saver")
+        powerprofilesctl set performance
+        notify-send "Power Profile" "Switched to Performance"
+        ;;
+    esac
+    ;;
+  3) # Right click: Show notification
+    notify-send "󰾅 Power Profile Module" "\- Left click to cycle through power profiles (performance, balanced, power-saver)."
+    ;;
+  6) # Scroll up/down: Edit script (optional, similar to sb-clock)
+    setsid -f "$TERMINAL" -e "$EDITOR" "$0"
+    ;;
+esac
+
+echo "$icon"
